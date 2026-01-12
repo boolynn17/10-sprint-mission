@@ -33,18 +33,16 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public void deleteChannel(UUID id){
-        channelList.removeIf(channel -> channel.getId().equals(id));
+    public void deleteChannel(UUID id){ // 예외 처리가 구현되어있는 findChannelById(id) 사용
+        Channel targetChannel = findChannelById(id);
+        channelList.remove(targetChannel);
     }
 
-    public void updateChannel(UUID id, Channel channelName){
-        Channel targetChannel = findChannelById(id);
+    public Channel updateChannel(UUID id, Channel channelName){
+        Channel targetChannel = findChannelById(id); // 예외 처리가 구현되어있는 findChannelById(id) 사용
 
-        if(targetChannel != null){
-            targetChannel.updateChannelInfo(channelName.getChannelName());
-        } else {
-            System.out.println("수정할 채널을 찾을 수 없습니다.");
-        }
+        targetChannel.updateChannelInfo(channelName.getChannelName());
+        return targetChannel;
     }
 
 }

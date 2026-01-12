@@ -1,7 +1,11 @@
 package com.sprint.mission.discodeit.service.jcf;
 
+import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +14,29 @@ import java.util.stream.Collectors;
 
 public class JCFMessageService implements MessageService {
     private final List<Message> messageList;
-    public JCFMessageService(){
+    private final UserService userService;
+    private final ChannelService channelService;
+
+    public JCFMessageService(UserService userService, ChannelService channelService){
         this.messageList = new ArrayList<>();
+        this.userService = userService;
+        this.channelService = channelService;
     }
 
-    public void createMessage(Message message){
-        messageList.add(message);
-        System.out.println("메시지가 전송되었습니다. " + message.getContent());
+    public Message createMessage(String content, UUID channelId, UUID userId){
+        Channel channel = channelService.findChannelById(channelId);
+        User user = userService.findUserById(userId);
+
+        Message newMessage = new Message(content, channel, user);
+
+        messageList.add(newMessage);
+
+        return newMessage;
     }
 
     public List<Message> findMessagesByChannelId(UUID channelId){
         return messageList.stream()
-                .filter(message -> message.getChannelId().equals(channelId))
+                .filter(message -> message.getChannel().getId().equals(channelId))
                 .collect(Collectors.toList());
     }
 

@@ -4,19 +4,19 @@ import java.util.UUID;
 
 public class Message extends BaseEntity{
     private String content;
-    private UUID channelId;
-    private UUID userId;
+    private Channel channel;
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
 
     public String getContent() {
         return content;
-    }
-
-    public UUID getChannelId() {
-        return channelId;
-    }
-
-    public UUID getUserId() {
-        return userId;
     }
 
     public void updateContent(String newContent){
@@ -24,10 +24,10 @@ public class Message extends BaseEntity{
         super.setUpdatedAt(System.currentTimeMillis());
     }
 
-    public Message(String content, UUID channelId, UUID userId) {
+    public Message(String content, Channel channel, User user) {
         this.content = content;
-        this.channelId = channelId;
-        this.userId = userId;
+        this.channel = channel;
+        this.user = user;
     }
 
 

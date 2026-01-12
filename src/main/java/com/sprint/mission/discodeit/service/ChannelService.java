@@ -12,7 +12,7 @@ public interface ChannelService {
     Channel findChannelById(UUID id);
     List<Channel> findAllChannels();
 
-    void updateChannel(UUID id, Channel channelName);
+    Channel updateChannel(UUID id, Channel channelName);
 
 
 }
