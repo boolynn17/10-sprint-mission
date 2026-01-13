@@ -12,9 +12,7 @@ public interface UserService {
 
     List<User> findAllUsers();
 
-    User updateUsername(UUID id, String newUsername);
-
-    User updateEmail(UUID id, String newEmail);
+    User updateUserInfo(UUID id, String newUsername, String newEmail);
 
     User changePassword(UUID id, String newPassword);
 

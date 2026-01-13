@@ -35,17 +35,39 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public User updateUsername(UUID id, String newUsername){
+    public User updateUserInfo(UUID id, String newUsername, String newEmail){
         User targetUser = findUserById(id);
-        targetUser.updateUsername(newUsername);
+        try{
+            validateUpdateInfo(newUsername, newEmail);
+        } catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
+            return targetUser;
+        }
+
+        if (newUsername != null){
+            targetUser.updateUsername(newUsername);
+            System.out.println("이름이 변경되었습니다: " + targetUser.getUsername());
+        }
+        if (newEmail != null){
+            targetUser.updateEmail(newEmail);
+            System.out.println("이메일이 변경되었습니다: " + targetUser.getEmail());
+        }
         return targetUser;
     }
 
-    @Override
-    public User updateEmail(UUID id, String newEmail){
-        User targetUser = findUserById(id);
-        targetUser.updateEmail(newEmail);
-        return targetUser;
+    public void validateUpdateInfo(String name, String email){
+        if (name == null && email == null){
+            throw new IllegalArgumentException("둘 중 하나는 입력해야 합니다.");
+        }
+        if (name != null && name.contains(" ")){
+            throw new IllegalArgumentException("띄어쓰기는 포함할 수 없습니다.");
+        }
+        if (email != null && !email.contains("@")){
+            throw new IllegalArgumentException("이메일 형식이 잘못되었습니다.");
+        }
+        if (email != null && email.contains(" ")){
+            throw new IllegalArgumentException("띄어쓰기는 포함할 수 없습니다.");
+        }
     }
 
     @Override

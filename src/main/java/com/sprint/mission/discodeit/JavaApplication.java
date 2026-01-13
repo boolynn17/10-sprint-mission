@@ -25,8 +25,11 @@ public class JavaApplication {
         System.out.println("유저 기능 테스트");
 
         // 유저 등록
-        User createdUser = userService.createUser("임지호", "1234", "jiho@codeit.kr");
+        User createdUser = userService.createUser("임지호", "1234", "jiho@codeit.com");
         UUID createdUserId = createdUser.getId();
+
+        User createdUser2 = userService.createUser("홍길동", "gildong", "gildong@codeit.com");
+        UUID createdUserId2 = createdUser2.getId();
 
         // 단건 조회
         System.out.println("\n단건 조회 시도:");
@@ -41,31 +44,23 @@ public class JavaApplication {
         // 수정
         System.out.println("\n>> 유저 정보 수정 시도:");
 
-        User updatedUser = userService.updateUsername(createdUserId, "아임지호");
+        User updatedUser = userService.updateUserInfo(createdUserId, "아임지호", "newjiho@codeit.com");
         System.out.println("이름 변경 확인: " + updatedUser.getUsername());
-
-        updatedUser = userService.updateEmail(createdUserId, "newjiho@codeit.kr");
-        System.out.println("이메일 변경 확인: " + updatedUser.getEmail());
-
         updatedUser = userService.changePassword(createdUserId, "234234");
         System.out.println("비밀번호 변경 확인: " + updatedUser.getPassword());
 
-        System.out.println("최종 상태: " + updatedUser.toString());
+        System.out.println("\n------------------------------------------\n");
 
-//        userService.updateUsername(createdUserId, "아임지호");
-//        userService.updateEmail(createdUserId, "newjiho@codeit.kr");
-//        userService.changePassword(createdUserId, "234234");
+        User updatedUser2 = userService.updateUserInfo(createdUserId2, null, "newgildong@naver.com");
+        System.out.println(updatedUser2);
+        updatedUser2 = userService.updateUserInfo(createdUserId2, "홍 길동", "new@codeit.kr");
+        System.out.println(updatedUser2);
+        updatedUser2 = userService.updateUserInfo(createdUserId2, null, null);
+        System.out.println(updatedUser2);
+        updatedUser2 = userService.updateUserInfo(createdUserId2, "뉴길동", null);
+        System.out.println(updatedUser2);
 
-        // 수정된 데이터 조회
-//        User updatedUser = userService.findUserById(createdUserId);
-//        System.out.println("수정된 이름: " + updatedUser.getUsername());
-//        System.out.println("수정된 이메일: " + updatedUser.getEmail());
-//        System.out.println("수정된 비밀번호: " + updatedUser.getPassword());
-
-        // 비밀번호 변경 테스트
-//        userService.changePassword(createdUserId, "5678");
-//        System.out.println("비밀번호 변경 완료: " + userService.findUserById(createdUserId).getPassword());
-
+        System.out.println("최종 상태: " + updatedUser);
 
         System.out.println("\n------------------------------------------\n");
 
@@ -82,11 +77,8 @@ public class JavaApplication {
 
         // 수정
         Channel updatedChannel = channelService.updateChannel(createdChannelId, "공지방");
-//        Channel updateChannelData = new Channel("공지사항");
-//        channelService.updateChannel(createdChannelId, updateChannelData.getChannelName());
 
         // 수정 확인
-//        Channel updatedChannel = channelService.findChannelById(createdChannelId);
         System.out.println("변경된 채널명: " + updatedChannel.getChannelName());
 
 
@@ -120,8 +112,8 @@ public class JavaApplication {
         messageService.deleteMessage(msg2.getId());
 
         // 유저 삭제
-        userService.deleteUser(createdUserId);
         System.out.println("\n>> 유저 삭제 확인:");
+        userService.deleteUser(createdUserId);
         try {
             userService.findUserById(createdUserId);
         } catch (IllegalArgumentException e) {

@@ -37,4 +37,9 @@ public class User extends BaseEntity {
         this.password = password;
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "이름: " + username + ", 이메일: " + email + ", 비밀번호: " + password;
+    }
 }
