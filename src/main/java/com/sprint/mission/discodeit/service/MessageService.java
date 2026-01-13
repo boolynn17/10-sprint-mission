@@ -13,7 +13,7 @@ public interface MessageService {
     Message read(UUID id);
     List<Message> readAll();
     List<Message> readAllMessageByChannel(Channel channelId); // 채널별 메시지 목록 조회
-    void update(UUID id, String text);
+    Message update(UUID id, String text);
     void delete(UUID id);
 
 }

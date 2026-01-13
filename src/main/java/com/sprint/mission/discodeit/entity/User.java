@@ -17,18 +17,14 @@ public class User extends BaseEntity{
 
 
     // update 메소드
-    public void update(String name, String email) {
-        this.name = name;
-        this.email = email;
+    public User update(String name, String email) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (email != null) {
+            this.email = email;
+        }
         recordUpdate();
+        return this;
     }
-    public void updateName(String name) {
-        this.name = name;
-        recordUpdate();
-    }
-    public void updateEmail(String email) { // 질문: 이렇게 여러 개로 나누는 게 좋을지, 하나의 메소드로 사용하는 것이 좋을지?
-        this.email = email;
-        recordUpdate();
-    }
-
 }

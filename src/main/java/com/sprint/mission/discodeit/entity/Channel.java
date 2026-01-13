@@ -13,9 +13,10 @@ public class Channel extends BaseEntity {
     public String getName() { return name; }
 
     // update 메소드
-    public void update(String name) {
+    public Channel update(String name) {
         this.name = name;
         recordUpdate();
+        return this;
     }
 
 }

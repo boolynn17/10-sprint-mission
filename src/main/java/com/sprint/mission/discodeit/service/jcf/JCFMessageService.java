@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.service.jcf;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.exception.NotFoundException;
 import com.sprint.mission.discodeit.service.MessageService;
 
 import java.util.ArrayList;
@@ -46,11 +47,9 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public void update(UUID id, String text) {
+    public Message update(UUID id, String text) {
         Message message = read(id);
-        if(message != null && text != null) {
-            message.update(text);
-        }
+        return message.update(text);
     }
 
     @Override

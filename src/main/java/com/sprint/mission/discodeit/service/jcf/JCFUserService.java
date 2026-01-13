@@ -1,6 +1,8 @@
 package com.sprint.mission.discodeit.service.jcf;
 
+import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.exception.NotFoundException;
 import com.sprint.mission.discodeit.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,7 @@ public class JCFUserService implements UserService {
         return data.stream()
                 .filter(user -> user.getId().equals(id))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow( () -> new NotFoundException("해당 ID의 유저를 찾을 수 없습니다"));
     }
 
     @Override
@@ -35,27 +37,9 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public void update(UUID id, String name, String email) {
+    public User update(UUID id, String name, String email) {
         User user = read(id);
-        if(user != null) {
-            user.update(name, email);
-        }
-    }
-
-    @Override
-    public void updateName(UUID id, String name) {
-        User user = read(id);
-        if(user != null) {
-            user.updateName(name);
-        }
-    }
-
-    @Override
-    public void updateEmail(UUID id, String email) {
-        User user = read(id);
-        if(user != null) {
-            user.updateEmail(email);
-        }
+        return user.update(name, email);
     }
 
     @Override

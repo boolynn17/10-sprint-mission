@@ -39,21 +39,19 @@ public class JavaApplication {
                 + "\n이메일: " + userService.read(user1.getId()).getEmail());
         System.out.println("수정 시각: " + userService.read(user1.getId()).getUpdatedAt());
 
-        userService.updateName(user2.getId(), "하봉구");
+        userService.update(user2.getId(), "하봉구", null);
         System.out.println("1-3-2. 유저 이름 수정 완료: " + "\n이름: " + userService.read(user2.getId()).getName()
                 + "\n이메일: " + userService.read(user2.getId()).getEmail());
         System.out.println("수정 시각: " + userService.read(user2.getId()).getUpdatedAt());
 
-        userService.updateEmail(user3.getId(), "miyeonkang2003@naver.com");
+        userService.update(user3.getId(), null, "miyeonkang2003@naver.com");
         System.out.println("1-3-3. 유저 이메일 수정 완료: " + "\n이름: " + userService.read(user3.getId()).getName()
                 + "\n이메일: " + userService.read(user3.getId()).getEmail());
         System.out.println("수정 시각: " + userService.read(user3.getId()).getUpdatedAt());
 
         // 1-4. user 정보 삭제 및 확인
         userService.delete(user3.getId());
-        if (userService.read(user3.getId()) == null) {
-            System.out.println("1-4. 유저 정보 삭제 완료");
-        }
+        System.out.println("1-4. 유저 정보 삭제 완료");
 
         // 1-5. user 다건 재조회로 정보 삭제 확인
         System.out.println("1-5. 유저 다건 재조회: " + "총" + userService.readAll().size() + "명");
@@ -82,9 +80,7 @@ public class JavaApplication {
 
         // 2-4. channel 정보 삭제 및 확인
         channelService.delete(channel3.getId());
-        if (channelService.read(channel3.getId()) == null) {
-            System.out.println("2-4. 채널 정보 삭제 완료");
-        }
+        System.out.println("2-4. 채널 정보 삭제 완료");
 
         // 2-5. channel 다건 재조회로 정보 삭제 확인
         System.out.println("2-5. channel 다건 재조회: " + "총" + channelService.readAll().size() + "개");
@@ -111,9 +107,7 @@ public class JavaApplication {
 
         // 3-4. message 삭제 및 확인
         messageService.delete(message1.getId());
-        if (messageService.read(message1.getId()) == null) {
-            System.out.println("3-4. 메시지 내용 삭제 완료");
-        }
+        System.out.println("3-4. 메시지 내용 삭제 완료");
 
         // 3-5. message 다건 조회
         System.out.println("3-5. 메세지 다건 재조회: " + "총" + messageService.readAll().size() + "개");

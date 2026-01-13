@@ -19,9 +19,10 @@ public class Message extends BaseEntity {
 
 
     // update 메소드
-    public void update(String text) {
+    public Message update(String text) {
         this.text = text;
         recordUpdate();
+        return this;
     }
 
 }
