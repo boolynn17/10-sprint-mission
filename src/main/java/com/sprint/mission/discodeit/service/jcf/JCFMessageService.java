@@ -33,7 +33,7 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public List<Message> readByChannel(UUID channelId) {
+    public List<Message> readAllMessageByChannel(UUID channelId) {
         return data.stream()
                 .filter(message -> message.getChannelId().equals(channelId))
                 .collect(Collectors.toList());
