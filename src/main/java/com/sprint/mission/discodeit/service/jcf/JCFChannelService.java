@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.service.jcf;
 
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.exception.NotFoundException;
 import com.sprint.mission.discodeit.service.ChannelService;
@@ -40,6 +41,12 @@ public class JCFChannelService implements ChannelService {
     public List<User> getUserList(UUID channelId) {
         Channel channel = read(channelId);
         return channel.getUserList();
+    }
+
+    @Override
+    public List<Message> getMsgList(UUID channelId) {
+        Channel channel = read(channelId);
+        return channel.getMsgList();
     }
 
     @Override

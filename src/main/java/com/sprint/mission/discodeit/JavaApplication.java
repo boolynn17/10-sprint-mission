@@ -109,7 +109,7 @@ public class JavaApplication {
         System.out.println("수정 시각: " + messageService.read(message2.getId()).getUpdatedAt());
 
         // 3-4. message 삭제 및 확인
-        messageService.delete(message1.getId());
+        messageService.delete(message2.getId());
         System.out.println("3-4. 메시지 내용 삭제 완료");
 
         // 3-5. message 다건 조회
@@ -121,28 +121,47 @@ public class JavaApplication {
 
 
         //================================ 추가 기능 ================================
-        // -----------------------1. 특정 채널의 참가자 목록 조회-----------------------
-        // 1-1. user의 channel 등록
+        // -----------------------1. 채널의 참가자 목록/메시지 조회-----------------------
+        // user의 channel 등록
         user1.joinChannel(channel1);
         user2.joinChannel(channel1);
 
-        // 1-2. channel 참가자 목록(name) 조회
+        // 1-1. channel 참가자 목록(name) 조회
         List<User> userList = channelService.getUserList(channel1.getId());
         List<String> userNames = userList.stream()
                 .map(User::getName)
                 .toList();
-        System.out.println("1. 채널 참가자 목록 조회");
+        System.out.println("1-1. 채널 참가자 목록 조회");
         System.out.println(channel1.getName() + "의 참가자 목록: " + userNames);
         System.out.println();
 
+        // 1-2. channel 참가자 메시지(sender, text) 조회
+        List<Message> channelMessages = channelService.getMsgList(channel1.getId());
+        List<String> channelMessageContext = channelMessages.stream()
+                .map(message -> "[" + message.getSender().getName() + "] : " + message.getText())
+                .toList();
+        System.out.println("1-2. 채널 메시지 목록 조회");
+        System.out.println(channel1.getName() + "의 메시지 목록: " + channelMessageContext);
+        System.out.println();
 
-        // -----------------------2. 특정 유저의 참가 중인 채널 조회-----------------------
-        List<Channel> channelList = userService.getChnlList(user1.getId());
-        List<String> chnlNames = channelList.stream()
+
+        // -----------------------2. 유저의 채널/메시지 조회-----------------------
+        // 1-1. user의 channel 목록 조회
+        List<Channel> channels = userService.getChnlList(user1.getId());
+        List<String> channelNames = channels.stream()
                 .map(Channel::getName)
                 .toList();
-        System.out.println("2. 유저의 채널 목록 조회");
-        System.out.println(user1.getName() + "의 채녈 목록: " + chnlNames);
+        System.out.println("2-1. 유저의 채널 목록 조회");
+        System.out.println(user1.getName() + "의 채녈 목록: " + channelNames);
+        System.out.println();
+
+        // 1-2. user의 message 목록 조회 -> 다이렉트 메시지를 구현하는 게 아닌 이상 필요한가?
+        List<Message> userMessages = userService.getMsgList(user1.getId());
+        List<String> userMessageContext =userMessages.stream()
+                .map(message -> "[" + message.getSender().getName() + "] : " + message.getText())
+                .toList();
+        System.out.println("2-2. 유저의 메시지 목록 조회");
+        System.out.println(user1.getName() + "의 메시지 목록: " + userMessageContext);
         System.out.println();
 
         System.out.println("=== [종료] 서비스 테스트 ===");

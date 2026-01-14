@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.service.jcf;
 
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.exception.NotFoundException;
 import com.sprint.mission.discodeit.service.UserService;
@@ -36,9 +37,16 @@ public class JCFUserService implements UserService {
         return new ArrayList<>(data);
     }
 
+    @Override
     public List<Channel> getChnlList(UUID userId) {
         User user = read(userId);
         return user.getChnlList();
+    }
+
+    @Override
+    public List<Message> getMsgList(UUID userId) {
+        User user = read(userId);
+        return user.getMsgList();
     }
 
     @Override

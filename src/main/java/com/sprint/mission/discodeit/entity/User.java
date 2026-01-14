@@ -15,7 +15,6 @@ public class User extends BaseEntity{
         this.email = email;
     }
 
-    //
     public void joinChannel(Channel channel) {
         if(!this.chnlList.contains(channel)) {
             this.chnlList.add(channel);
@@ -27,9 +26,8 @@ public class User extends BaseEntity{
     // Getter 메소드
     public String getName() { return name; }
     public String getEmail() { return email; }
-    public List <Channel> getChnlList() {
-        return chnlList;
-    }
+    public List <Channel> getChnlList() { return chnlList;}
+    public List <Message> getMsgList() { return msgList;}
 
 
     // update 메소드
