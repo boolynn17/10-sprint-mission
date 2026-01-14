@@ -137,6 +137,13 @@ public class JavaApplication {
 
 
         // -----------------------2. 특정 유저의 참가 중인 채널 조회-----------------------
+        List<Channel> channelList = userService.getChnlList(user1.getId());
+        List<String> chnlNames = channelList.stream()
+                .map(Channel::getName)
+                .toList();
+        System.out.println("1-2. 유저의 채널 목록 조회");
+        System.out.println(user1.getName() + "의 채녈 목록: " + chnlNames);
+        System.out.println();
 
         System.out.println("=== [종료] 서비스 테스트 ===");
     }

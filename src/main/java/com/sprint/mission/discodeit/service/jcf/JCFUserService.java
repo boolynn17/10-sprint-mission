@@ -24,9 +24,9 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public User read(UUID id) {
+    public User read(UUID userId) {
         return data.stream()
-                .filter(user -> user.getId().equals(id))
+                .filter(user -> user.getId().equals(userId))
                 .findFirst()
                 .orElseThrow( () -> new NotFoundException("해당 ID의 유저를 찾을 수 없습니다"));
     }
@@ -34,6 +34,11 @@ public class JCFUserService implements UserService {
     @Override
     public List<User> readAll() {
         return new ArrayList<>(data);
+    }
+
+    public List<Channel> getChnlList(UUID userId) {
+        User user = read(userId);
+        return user.getChnlList();
     }
 
     @Override
