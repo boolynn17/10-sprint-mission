@@ -51,7 +51,7 @@ public class JCFMessageService implements MessageService {
     @Override
     public List<Message> getMsgsByUser(UUID userId) {
         return data.stream()
-                .filter(message -> message.getChannel().getId().equals(userId))
+                .filter(message -> message.getSender().getId().equals(userId))
                 .toList();
     }
 
