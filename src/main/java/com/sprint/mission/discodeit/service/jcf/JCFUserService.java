@@ -4,6 +4,7 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.exception.NotFoundException;
+import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +18,15 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public User create(String name, String email)
-    {
+    public User create(String name, String email) {
         User user = new User(name, email);
         data.add(user);
         return user;
+    }
+
+    @Override
+    public List<User> readAll() {
+        return new ArrayList<>(data);
     }
 
     @Override
@@ -30,11 +35,6 @@ public class JCFUserService implements UserService {
                 .filter(user -> user.getId().equals(userId))
                 .findFirst()
                 .orElseThrow( () -> new NotFoundException("해당 ID의 유저를 찾을 수 없습니다"));
-    }
-
-    @Override
-    public List<User> readAll() {
-        return new ArrayList<>(data);
     }
 
     @Override

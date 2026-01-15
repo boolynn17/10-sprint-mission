@@ -5,9 +5,11 @@ import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.service.DiscordService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
+import com.sprint.mission.discodeit.service.jcf.JCFDiscordService;
 import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
 import com.sprint.mission.discodeit.service.jcf.JCFUserService;
 
@@ -19,6 +21,8 @@ public class JavaApplication {
         UserService userService = new JCFUserService();
         ChannelService channelService = new JCFChannelService();
         MessageService messageService = new JCFMessageService(userService, channelService);
+
+        DiscordService discordService = new JCFDiscordService(userService, channelService, messageService);
 
         System.out.println("=== [시작] 서비스 테스트 ===");
         //================================ 기본 기능 ================================
@@ -127,7 +131,7 @@ public class JavaApplication {
         user2.joinChannel(channel1);
 
         // 1-1. channel 참가자 목록(name) 조회
-        List<User> userList = userService.getUsersByChnl(channel1.getId());
+        List<User> userList = discordService.getUsersByChnlOrThrow(channel1.getId());
         List<String> userNames = userList.stream()
                 .map(User::getName)
                 .toList();
@@ -136,7 +140,7 @@ public class JavaApplication {
         System.out.println();
 
         // 1-2. channel 참가자 메시지(sender, text) 조회
-        List<Message> channelMessages = messageService.getMsgsByChnl(channel1.getId());
+        List<Message> channelMessages = discordService.getMsgsByChnlOrThrow(channel1.getId());
         List<String> channelMessageContext = channelMessages.stream()
                 .map(message -> "[" + message.getSender().getName() + "] : " + message.getText())
                 .toList();
@@ -147,7 +151,7 @@ public class JavaApplication {
 
         // -----------------------2. 유저의 채널/메시지 조회-----------------------
         // 1-1. user의 channel 목록 조회
-        List<Channel> channels = channelService.getChnlsByUser(user1.getId());
+        List<Channel> channels = discordService.getChnlsByUserOrThrow(user1.getId());
         List<String> channelNames = channels.stream()
                 .map(Channel::getName)
                 .toList();
@@ -156,7 +160,7 @@ public class JavaApplication {
         System.out.println();
 
         // 1-2. user의 message 목록 조회
-        List<Message> userMessages = messageService.getMsgsByUser(user1.getId());
+        List<Message> userMessages = discordService.getMsgsByUserOrThrow(user1.getId());
         List<String> userMessageContext =userMessages.stream()
                 .map(message -> "[" + message.getSender().getName() + "] : " + message.getText())
                 .toList();
