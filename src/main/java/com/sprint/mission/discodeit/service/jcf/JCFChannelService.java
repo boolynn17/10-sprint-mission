@@ -38,15 +38,11 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public List<User> getUserList(UUID channelId) {
-        Channel channel = read(channelId);
-        return channel.getUserList();
-    }
-
-    @Override
-    public List<Message> getMsgList(UUID channelId) {
-        Channel channel = read(channelId);
-        return channel.getMsgList();
+    public List<Channel> getChnlsByUser(UUID userId) {
+        return data.stream()
+                .filter(channel -> channel.getUserList().stream()
+                        .anyMatch(user -> user.getId().equals(userId)))
+                .toList();
     }
 
     @Override

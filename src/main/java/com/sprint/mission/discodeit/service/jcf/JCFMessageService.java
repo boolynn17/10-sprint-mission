@@ -32,9 +32,6 @@ public class JCFMessageService implements MessageService {
         Message message = new Message(channel, sender, text);
         data.add(message);
 
-        channel.getMsgList().add(message);
-        sender.getMsgList().add(message);
-
         return message;
     }
 
@@ -49,6 +46,20 @@ public class JCFMessageService implements MessageService {
     @Override
     public List<Message> readAll() {
         return new ArrayList<>(data);
+    }
+
+    @Override
+    public List<Message> getMsgsByUser(UUID userId) {
+        return data.stream()
+                .filter(message -> message.getChannel().getId().equals(userId))
+                .toList();
+    }
+
+    @Override
+    public List<Message> getMsgsByChnl(UUID channelId) {
+        return data.stream()
+                .filter(message -> message.getChannel().getId().equals(channelId))
+                .toList();
     }
 
     @Override

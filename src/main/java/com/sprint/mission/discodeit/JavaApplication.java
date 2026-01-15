@@ -127,7 +127,7 @@ public class JavaApplication {
         user2.joinChannel(channel1);
 
         // 1-1. channel 참가자 목록(name) 조회
-        List<User> userList = channelService.getUserList(channel1.getId());
+        List<User> userList = userService.getUsersByChnl(channel1.getId());
         List<String> userNames = userList.stream()
                 .map(User::getName)
                 .toList();
@@ -136,7 +136,7 @@ public class JavaApplication {
         System.out.println();
 
         // 1-2. channel 참가자 메시지(sender, text) 조회
-        List<Message> channelMessages = channelService.getMsgList(channel1.getId());
+        List<Message> channelMessages = messageService.getMsgsByChnl(channel1.getId());
         List<String> channelMessageContext = channelMessages.stream()
                 .map(message -> "[" + message.getSender().getName() + "] : " + message.getText())
                 .toList();
@@ -147,7 +147,7 @@ public class JavaApplication {
 
         // -----------------------2. 유저의 채널/메시지 조회-----------------------
         // 1-1. user의 channel 목록 조회
-        List<Channel> channels = userService.getChnlList(user1.getId());
+        List<Channel> channels = channelService.getChnlsByUser(user1.getId());
         List<String> channelNames = channels.stream()
                 .map(Channel::getName)
                 .toList();
@@ -155,8 +155,8 @@ public class JavaApplication {
         System.out.println(user1.getName() + "의 채녈 목록: " + channelNames);
         System.out.println();
 
-        // 1-2. user의 message 목록 조회 -> 다이렉트 메시지를 구현하는 게 아닌 이상 필요한가?
-        List<Message> userMessages = userService.getMsgList(user1.getId());
+        // 1-2. user의 message 목록 조회
+        List<Message> userMessages = messageService.getMsgsByUser(user1.getId());
         List<String> userMessageContext =userMessages.stream()
                 .map(message -> "[" + message.getSender().getName() + "] : " + message.getText())
                 .toList();

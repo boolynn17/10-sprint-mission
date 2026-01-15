@@ -11,8 +11,7 @@ public interface ChannelService {
     Channel create(String name);
     Channel read(UUID id);
     List<Channel> readAll();
-    List<User> getUserList(UUID channelId);
-    List<Message> getMsgList(UUID channelId);
+    List<Channel> getChnlsByUser(UUID userId);
     Channel update(UUID id, String name);
     void delete(UUID id);
 }

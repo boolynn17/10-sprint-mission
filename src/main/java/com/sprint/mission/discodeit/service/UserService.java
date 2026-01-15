@@ -10,8 +10,7 @@ public interface UserService {
         User create(String name, String email);
         User read(UUID userId);
         List<User> readAll();
-        List<Channel> getChnlList(UUID userId);
-        List<Message> getMsgList(UUID userId);
+        List<User> getUsersByChnl(UUID channelId);
         User update(UUID id, String name, String email);
         void delete(UUID id);
 

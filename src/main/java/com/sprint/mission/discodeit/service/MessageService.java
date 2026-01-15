@@ -12,6 +12,8 @@ public interface MessageService {
     Message create(UUID channelId, UUID senderId, String text);
     Message read(UUID id);
     List<Message> readAll();
+    List<Message> getMsgsByUser(UUID userId);
+    List<Message> getMsgsByChnl(UUID channelId);
     Message update(UUID id, String text);
     void delete(UUID id);
 

@@ -38,15 +38,11 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public List<Channel> getChnlList(UUID userId) {
-        User user = read(userId);
-        return user.getChnlList();
-    }
-
-    @Override
-    public List<Message> getMsgList(UUID userId) {
-        User user = read(userId);
-        return user.getMsgList();
+    public List<User> getUsersByChnl(UUID channelId) {
+        return data.stream()
+                .filter(user -> user.getChnlList().stream() // 유저는 여러 채널을 가질 수 있음
+                        .anyMatch(channel -> channel.getId().equals(channelId)))
+                .toList();
     }
 
     @Override
