@@ -23,26 +23,26 @@ public class JCFDiscordService implements DiscordService {
     }
 
     @Override
-    public List<User> getUsersByChnlOrThrow(UUID channelId) {
+    public List<User> getUsersByChannel(UUID channelId) {
         channelService.read(channelId);
-        return userService.getUsersByChnl(channelId);
+        return userService.getUsersByChannel(channelId);
     }
 
     @Override
-    public List<Channel> getChnlsByUserOrThrow(UUID userId) {
+    public List<Channel> getChannelsByUser(UUID userId) {
         userService.read(userId);
-        return channelService.getChnlsByUser(userId);
+        return channelService.getChannelsByUser(userId);
     }
 
     @Override
-    public List<Message> getMsgsByUserOrThrow(UUID userId) {
+    public List<Message> getMessagesByUser(UUID userId) {
         userService.read(userId);
-        return messageService.getMsgsByUser(userId);
+        return messageService.getMessagesByUser(userId);
     }
 
     @Override
-    public List<Message> getMsgsByChnlOrThrow(UUID channelId) {
+    public List<Message> getMessagesByChannel(UUID channelId) {
         channelService.read(channelId);
-        return messageService.getMsgsByChnl(channelId);
+        return messageService.getMessagesByChannel(channelId);
     }
 }

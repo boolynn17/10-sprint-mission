@@ -49,14 +49,14 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public List<Message> getMsgsByUser(UUID userId) {
+    public List<Message> getMessagesByUser(UUID userId) {
         return data.stream()
                 .filter(message -> message.getSender().getId().equals(userId))
                 .toList();
     }
 
     @Override
-    public List<Message> getMsgsByChnl(UUID channelId) {
+    public List<Message> getMessagesByChannel(UUID channelId) {
         return data.stream()
                 .filter(message -> message.getChannel().getId().equals(channelId))
                 .toList();

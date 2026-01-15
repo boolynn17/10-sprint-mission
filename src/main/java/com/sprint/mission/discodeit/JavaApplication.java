@@ -131,7 +131,7 @@ public class JavaApplication {
         user2.joinChannel(channel1);
 
         // 1-1. channel 참가자 목록(name) 조회
-        List<User> userList = discordService.getUsersByChnlOrThrow(channel1.getId());
+        List<User> userList = discordService.getUsersByChannel(channel1.getId());
         List<String> userNames = userList.stream()
                 .map(User::getName)
                 .toList();
@@ -140,7 +140,7 @@ public class JavaApplication {
         System.out.println();
 
         // 1-2. channel 참가자 메시지(sender, text) 조회
-        List<Message> channelMessages = discordService.getMsgsByChnlOrThrow(channel1.getId());
+        List<Message> channelMessages = discordService.getMessagesByChannel(channel1.getId());
         List<String> channelMessageContext = channelMessages.stream()
                 .map(message -> "[" + message.getSender().getName() + "] : " + message.getText())
                 .toList();
@@ -151,7 +151,7 @@ public class JavaApplication {
 
         // -----------------------2. 유저의 채널/메시지 조회-----------------------
         // 1-1. user의 channel 목록 조회
-        List<Channel> channels = discordService.getChnlsByUserOrThrow(user1.getId());
+        List<Channel> channels = discordService.getChannelsByUser(user1.getId());
         List<String> channelNames = channels.stream()
                 .map(Channel::getName)
                 .toList();
@@ -160,7 +160,7 @@ public class JavaApplication {
         System.out.println();
 
         // 1-2. user의 message 목록 조회
-        List<Message> userMessages = discordService.getMsgsByUserOrThrow(user1.getId());
+        List<Message> userMessages = discordService.getMessagesByUser(user1.getId());
         List<String> userMessageContext =userMessages.stream()
                 .map(message -> "[" + message.getSender().getName() + "] : " + message.getText())
                 .toList();

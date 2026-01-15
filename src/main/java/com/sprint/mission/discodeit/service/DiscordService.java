@@ -9,14 +9,14 @@ import java.util.UUID;
 
 public interface DiscordService {
     //UserService
-    List<User> getUsersByChnlOrThrow(UUID channelId);
+    List<User> getUsersByChannel(UUID channelId);
 
     // ChannelService
-    List<Channel> getChnlsByUserOrThrow(UUID userId);
+    List<Channel> getChannelsByUser(UUID userId);
 
     // MessageService
-    List<Message> getMsgsByUserOrThrow(UUID userId);
-    List<Message> getMsgsByChnlOrThrow(UUID channelId);
+    List<Message> getMessagesByUser(UUID userId);
+    List<Message> getMessagesByChannel(UUID channelId);
 
 
 }

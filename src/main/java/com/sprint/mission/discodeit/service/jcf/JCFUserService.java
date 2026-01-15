@@ -38,7 +38,7 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public List<User> getUsersByChnl(UUID channelId) {
+    public List<User> getUsersByChannel(UUID channelId) {
         return data.stream()
                 .filter(user -> user.getChnlList().stream() // 유저는 여러 채널을 가질 수 있음
                         .anyMatch(channel -> channel.getId().equals(channelId)))
