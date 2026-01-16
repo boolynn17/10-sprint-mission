@@ -6,7 +6,7 @@ import java.util.List;
 public class Channel extends BaseEntity {
     private String name;
     private List<User> userList = new ArrayList<>();
-    private List<Message> msgList = new ArrayList<>();
+    private List<Message> messageList = new ArrayList<>();
 
     public Channel(String name) {
         this.name = name;
@@ -17,8 +17,8 @@ public class Channel extends BaseEntity {
     public List<User> getUserList() {
         return userList;
     }
-    public List<Message> getMsgList() {
-        return msgList;
+    public List<Message> getMessageList() {
+        return messageList;
     }
 
 
