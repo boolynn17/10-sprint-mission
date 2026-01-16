@@ -1,10 +1,7 @@
 package com.sprint.mission.discodeit.service.jcf;
 
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.exception.NotFoundException;
-import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +37,7 @@ public class JCFUserService implements UserService {
     @Override
     public List<User> getUsersByChannel(UUID channelId) {
         return data.stream()
-                .filter(user -> user.getChnlList().stream() // 유저는 여러 채널을 가질 수 있음
+                .filter(user -> user.getChannelList().stream() // 유저는 여러 채널을 가질 수 있음
                         .anyMatch(channel -> channel.getId().equals(channelId)))
                 .toList();
     }

@@ -75,8 +75,12 @@ public class JCFMessageService implements MessageService {
 
     }
 
-}
+    @Override
+    public void deleteMessageByUserId(UUID userId) {
+        data.removeIf(message -> message.getSender().getId().equals(userId));
+    }
 
+}
 
 
 

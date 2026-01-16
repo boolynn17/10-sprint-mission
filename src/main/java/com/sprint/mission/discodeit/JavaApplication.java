@@ -14,6 +14,7 @@ import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
 import com.sprint.mission.discodeit.service.jcf.JCFUserService;
 
 import java.util.List;
+import java.util.UUID;
 
 public class JavaApplication {
     public static void main(String[] args) {
@@ -26,6 +27,7 @@ public class JavaApplication {
 
         System.out.println("=== [시작] 서비스 테스트 ===");
         //================================ 기본 기능 ================================
+        System.out.println("==기본 기능==");
         //---------------------------------1. user---------------------------------
         // 1-1. user 등록 및 조회
         User user1 = userService.create("박린", "lynnpark2003@ewha.ac.kr");
@@ -104,6 +106,9 @@ public class JavaApplication {
         Message message2 = messageService.create(channel1.getId(), user2.getId(), "냐옹~");
         System.out.println("3-1. 메시지 등록 완료: [" + user2.getName() + "] " + message2.getText());
 
+        Message message3 = messageService.create(channel1.getId(), user2.getId(), "짹짹");
+        System.out.println("3-1. 메시지 등록 완료: [" + user2.getName() + "] " + message2.getText());
+
         // 3-2. message 다건 조회
         System.out.println("3-2. 메세지 다건 조회: " + "총" + messageService.readAll().size() + "개");
 
@@ -125,6 +130,7 @@ public class JavaApplication {
 
 
         //================================ 추가 기능 ================================
+        System.out.println("==추가 기능==");
         // -----------------------1. 채널의 참가자 목록/메시지 조회-----------------------
         // user의 channel 등록
         user1.joinChannel(channel1);
@@ -166,6 +172,28 @@ public class JavaApplication {
                 .toList();
         System.out.println("2-2. 유저의 메시지 목록 조회");
         System.out.println(user1.getName() + "의 메시지 목록: " + userMessageContext);
+        System.out.println();
+        System.out.println();
+
+
+
+
+
+        //================================ 심화 기능 ================================
+        System.out.println("==심화 기능==");
+        // ---------------1. 유저 삭제 시 유저의 매세지/채널 목록에서 유저 삭제---------------
+        discordService.deleteUser(user1.getId());
+
+        System.out.println("1-1. 유저 삭제 시 메시지 목록 조회");
+        List<Message> updatedMessages = discordService.getMessagesByChannel(channel1.getId());
+        System.out.println(channel1.getName() + "의 메시지 목록: " +
+                updatedMessages.stream().map(m -> "[" + m.getSender().getName() + "] : " + m.getText()).toList());
+        System.out.println();
+
+        System.out.println("1-2. 유저 삭제 시 채널 참가자 목록 조회");
+        List<User> updatedChannels = discordService.getUsersByChannel(channel1.getId());
+        System.out.println(channel1.getName() + "의 참가자 목록: " +
+                updatedChannels.stream().map(User::getName).toList());
         System.out.println();
 
         System.out.println("=== [종료] 서비스 테스트 ===");

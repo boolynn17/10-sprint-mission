@@ -45,4 +45,14 @@ public class JCFDiscordService implements DiscordService {
         channelService.read(channelId);
         return messageService.getMessagesByChannel(channelId);
     }
+
+    @Override
+    public void deleteUser(UUID userId) {
+        userService.read(userId);
+        messageService.deleteMessageByUserId(userId);
+        channelService.deleteChannelListByUserId(userId);
+        userService.delete(userId);
+
+    }
+
 }

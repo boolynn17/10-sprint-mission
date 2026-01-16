@@ -18,5 +18,7 @@ public interface DiscordService {
     List<Message> getMessagesByUser(UUID userId);
     List<Message> getMessagesByChannel(UUID channelId);
 
+    void deleteUser(UUID userId);
+
 
 }
