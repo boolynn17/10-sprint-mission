@@ -60,9 +60,9 @@ public class JCFChannelService implements ChannelService {
 
     @Override
     public void deleteUserInChannels(UUID userId) {
-        List<Channel> joinedChannels = getChannelsByUser(userId);
-        for (Channel channel : joinedChannels) {
-            channel.getUserList().removeIf(user -> user.getId().equals(userId));
+        getChannelsByUser(userId)
+                .forEach(channel ->
+                        channel.getUserList().removeIf(user -> user.getId().equals(userId)));
         }
     }
-}
+
