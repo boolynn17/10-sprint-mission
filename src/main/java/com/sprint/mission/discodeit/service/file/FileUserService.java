@@ -35,9 +35,9 @@ public class FileUserService implements UserService {
     }
 
     @Override
-    public User create(String name, String email) {
+    public User create(String name, String email, String password) {
         List<User> data = loadData();
-        User user = new User(name, email);
+        User user = new User(name, email, password);
         data.add(user);
         saveData(data);
         return user;

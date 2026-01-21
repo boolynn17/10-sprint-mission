@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
-        User create(String name, String email);
+        User create(String name, String email, String password);
         User read(UUID userId);
         List<User> readAll();
         List<User> getUsersByChannel(UUID channelId);

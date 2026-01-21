@@ -8,12 +8,14 @@ public class User extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     private String name;
     private String email;
+    private String password;
     private List<Message> messageList = new ArrayList<>();
     private List<Channel> channelList = new ArrayList<>();
 
-    public User(String name, String email) {
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
+        this.password = password;
     }
 
     public void joinChannel(Channel channel) {
