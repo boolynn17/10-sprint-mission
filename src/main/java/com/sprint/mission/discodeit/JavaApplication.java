@@ -8,6 +8,9 @@ import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.DiscordService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
+import com.sprint.mission.discodeit.service.file.FileChannelService;
+import com.sprint.mission.discodeit.service.file.FileMessageService;
+import com.sprint.mission.discodeit.service.file.FileUserService;
 import com.sprint.mission.discodeit.service.jcf.JCFChannelService;
 import com.sprint.mission.discodeit.service.jcf.JCFDiscordService;
 import com.sprint.mission.discodeit.service.jcf.JCFMessageService;
@@ -209,6 +212,18 @@ public class JavaApplication {
         System.out.println("3-3. 메세지 다건 재조회: " + "총 " + messageService.readAll().size() + "개");
         System.out.println();
         System.out.println();
+
+        // 1. 파일 서비스들 준비 (생성자 호출)
+        UserService uService = new FileUserService();
+        ChannelService cService = new FileChannelService();
+        MessageService mService = new FileMessageService(userService, channelService);
+
+        // 2. 테스트 데이터 생성
+        User user = uService.create("린", "lynn@example.com");
+        Channel channel = cService.create("자바공부방");
+
+        System.out.println("생성된 유저: " + user.getName());
+        System.out.println("생성된 채널: " + channel.getName());
 
 
         System.out.println("=== [종료] 서비스 테스트 ===");
