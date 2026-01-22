@@ -76,9 +76,9 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public User update(UUID id, String name, String email) {
+    public User update(UUID id, String name, String email, String password) {
         User user = read(id);
-        return user.update(name, email);
+        return user.update(name, email, password);
     }
 
     @Override

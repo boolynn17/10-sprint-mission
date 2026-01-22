@@ -9,7 +9,7 @@ public interface UserService {
         User read(UUID userId);
         List<User> readAll();
         List<User> getUsersByChannel(UUID channelId);
-        User update(UUID id, String name, String email);
+        User update(UUID id, String name, String email, String password);
         void delete(UUID id);
         void deleteUsersInChannel(UUID channelId);
 

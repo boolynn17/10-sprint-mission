@@ -29,8 +29,16 @@ public class FileUserRepository implements UserRepository {
     @Override
     public User save(User user) {
         List<User> data = loadData();
-        data.removeIf(u -> u.getId().equals(user.getId())); // 이미 있는 유저면 지우고 업데이트
-        data.add(user);
+        Optional<User> existingUsers = data.stream()
+                .filter(u -> u.getId().equals(user.getId()))
+                .findFirst();
+
+        if (existingUsers.isPresent()) {
+            User existingUser = existingUsers.get();
+            existingUser.update(user.getName(), user.getEmail(), user.getPassword());
+        } else {
+            data.add(user);
+        }
         saveData(data);
         return user;
     }

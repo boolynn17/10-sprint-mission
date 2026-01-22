@@ -29,17 +29,21 @@ public class User extends BaseEntity implements Serializable {
     // Getter 메소드
     public String getName() { return name; }
     public String getEmail() { return email; }
+    public String getPassword() { return password; }
     public List <Channel> getChannelList() { return channelList;}
     public List <Message> getMessageList() { return messageList;}
 
 
     // update 메소드
-    public User update(String name, String email) {
+    public User update(String name, String email, String password) {
         if (name != null) {
             this.name = name;
         }
         if (email != null) {
             this.email = email;
+        }
+        if (password != null) {
+            this.password = password;
         }
         recordUpdate();
         return this;

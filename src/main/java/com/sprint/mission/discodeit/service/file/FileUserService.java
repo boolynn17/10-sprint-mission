@@ -98,13 +98,13 @@ public class FileUserService implements UserService {
     }
 
     @Override
-    public User update(UUID id, String name, String email) {
+    public User update(UUID id, String name, String email, String password) {
         List<User> data = loadData();
         User user = data.stream()
                 .filter(u -> u.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("유저 없음"));
-        user.update(name, email);
+        user.update(name, email, password);
         saveData(data);
         return user;
     }
