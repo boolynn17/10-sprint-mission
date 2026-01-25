@@ -48,4 +48,15 @@ public class User extends BaseEntity implements Serializable {
         recordUpdate();
         return this;
     }
+
+    // Setter 메소드
+    public void setName(String name) {
+        if(name != null) this.name = name;
+    }
+    public void setEmail(String email) {
+        if(email != null) this.email = email;
+    }
+    public void setPassword(String password) {
+        if(password != null) this.password = password;
+    }
 }

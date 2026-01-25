@@ -6,6 +6,7 @@ import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class BasicUserService implements UserService {
@@ -44,7 +45,11 @@ public class BasicUserService implements UserService {
     @Override
     public User update(UUID id, String name, String email, String password) {
         User user = read(id);
-        user.update(name, email, password);
+
+        Optional.ofNullable(name).ifPresent(user::setName);
+        Optional.ofNullable(email).ifPresent(user::setEmail);
+        Optional.ofNullable(password).ifPresent(user::setPassword);
+
         return userRepository.save(user);
     }
 
