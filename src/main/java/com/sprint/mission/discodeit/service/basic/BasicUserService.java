@@ -60,8 +60,7 @@ public class BasicUserService implements UserService {
 
     }
 
-    @Override
-    public void deleteUsersInChannel(UUID channelId) {
+    private void deleteUsersInChannel(UUID channelId) {
         List<User> userList = userRepository.findAll();
         userList.forEach(user -> {
             boolean removed = user.getChannelList().removeIf(channel ->
