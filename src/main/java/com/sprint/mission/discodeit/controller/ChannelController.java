@@ -33,8 +33,8 @@ public class ChannelController {
 
     // 공개 채널 정보 수정
     @PatchMapping("/{channelId}")
-    public ResponseEntity<Channel> updateChannel(
-            @PathVariable UUID channelId, @RequestBody PublicChannelUpdateRequest request) {
+    public ResponseEntity<Channel> updateChannel(@PathVariable UUID channelId,
+                                                 @RequestBody PublicChannelUpdateRequest request) {
         return ResponseEntity.ok(channelService.update(channelId, request));
     }
 
