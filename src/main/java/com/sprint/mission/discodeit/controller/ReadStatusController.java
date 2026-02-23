@@ -4,6 +4,8 @@ import com.sprint.mission.discodeit.dto.request.ReadStatusCreateRequest;
 import com.sprint.mission.discodeit.dto.request.ReadStatusUpdateRequest;
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.service.ReadStatusService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +26,12 @@ import java.util.UUID;
 @Controller
 @ResponseBody
 @RequestMapping("/api/readStatuses")
+@Tag(name = "ReadStatus", description = "상태 정보 관리 API")
 public class ReadStatusController {
 
   private final ReadStatusService readStatusService;
 
+  @Operation(summary = "생성", description = "사용자 및 채널 ID와 조회한 시간을 받아 상태 정보를 생성합니다.")
   @PostMapping
   public ResponseEntity<ReadStatus> create(@RequestBody ReadStatusCreateRequest request) {
     ReadStatus createdReadStatus = readStatusService.create(request);
@@ -36,6 +40,7 @@ public class ReadStatusController {
         .body(createdReadStatus);
   }
 
+  @Operation(summary = "정보 수정", description = "마지막으로 조회한 시간을 받아 상태 정보를 수정합니다.")
   @PatchMapping("/{readStatusId}")
   public ResponseEntity<ReadStatus> update(@PathVariable UUID readStatusId,
       @RequestBody ReadStatusUpdateRequest request) {
@@ -45,6 +50,7 @@ public class ReadStatusController {
         .body(updatedReadStatus);
   }
 
+  @Operation(summary = "다건 조회", description = "사용자 ID를 받아 해당 사용자의 상태 정보를 모두 조회합니다.")
   @GetMapping
   public ResponseEntity<List<ReadStatus>> findAllByUserId(@RequestParam("userId") UUID userId) {
     List<ReadStatus> readStatuses = readStatusService.findAllByUserId(userId);

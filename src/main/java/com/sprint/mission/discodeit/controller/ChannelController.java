@@ -6,6 +6,8 @@ import com.sprint.mission.discodeit.dto.request.PublicChannelCreateRequest;
 import com.sprint.mission.discodeit.dto.request.PublicChannelUpdateRequest;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +29,12 @@ import java.util.UUID;
 @Controller
 @ResponseBody
 @RequestMapping("/api/channels")
+@Tag(name = "Channel", description = "채널 관련 API")
 public class ChannelController {
 
   private final ChannelService channelService;
 
+  @Operation(summary = "생성(public)", description = "채널 이름과 설명을 받아 public 채널을 생성합니다.")
   @PostMapping("/public")
   public ResponseEntity<Channel> create(@RequestBody PublicChannelCreateRequest request) {
     Channel createdChannel = channelService.create(request);
@@ -39,6 +43,7 @@ public class ChannelController {
         .body(createdChannel);
   }
 
+  @Operation(summary = "생성(private)", description = "채널 참여자 리스트를 받아 private 채널을 생성합니다.")
   @PostMapping("/private")
   public ResponseEntity<Channel> create(@RequestBody PrivateChannelCreateRequest request) {
     Channel createdChannel = channelService.create(request);
@@ -47,6 +52,7 @@ public class ChannelController {
         .body(createdChannel);
   }
 
+  @Operation(summary = "정보 수정", description = "채널 ID로 채널 정보를 업데이트합니다.")
   @PatchMapping("/{channelId}")
   public ResponseEntity<Channel> update(@PathVariable UUID channelId,
       @RequestBody PublicChannelUpdateRequest request) {
@@ -56,6 +62,7 @@ public class ChannelController {
         .body(udpatedChannel);
   }
 
+  @Operation(summary = "삭제", description = "채널 ID로 채널을 삭제합니다.")
   @DeleteMapping("/{channelId}")
   public ResponseEntity<Void> delete(@PathVariable UUID channelId) {
     channelService.delete(channelId);
@@ -64,6 +71,7 @@ public class ChannelController {
         .build();
   }
 
+  @Operation(summary = "다건 조회", description = "사용자 ID로 해당 사용자가 참여한 채널을 모두 조회합니다.")
   @GetMapping
   public ResponseEntity<List<ChannelDto>> findAll(@RequestParam("userId") UUID userId) {
     List<ChannelDto> channels = channelService.findAllByUserId(userId);

@@ -9,6 +9,8 @@ import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.UserStatusService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,11 +28,13 @@ import java.util.UUID;
 @Controller
 @ResponseBody
 @RequestMapping("/api/users")
+@Tag(name = "User", description = "사용자 관련 API")
 public class UserController {
 
   private final UserService userService;
   private final UserStatusService userStatusService;
 
+  @Operation(summary = "등록", description = "사용자 이름, 이메일, 비밀번호를 받아 사용자를 등록합니다.")
   @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
   public ResponseEntity<User> create(
       @RequestPart("userCreateRequest") UserCreateRequest userCreateRequest,
@@ -44,9 +48,10 @@ public class UserController {
         .body(createdUser);
   }
 
+  @Operation(summary = "정보 수정", description = "사용자 ID로 해당 사용자의 정보를 수정합니다.")
   @PatchMapping(path = "/{userId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
   public ResponseEntity<User> update(
-      @RequestParam("userId") UUID userId,
+      @PathVariable UUID userId,
       @RequestPart("userUpdateRequest") UserUpdateRequest userUpdateRequest,
       @RequestPart(value = "profile", required = false) MultipartFile profile
   ) {
@@ -58,6 +63,7 @@ public class UserController {
         .body(updatedUser);
   }
 
+  @Operation(summary = "삭제", description = "사용자 ID로 해당 사용자를 삭제합니다.")
   @DeleteMapping("/{userId}")
   public ResponseEntity<Void> delete(@PathVariable UUID userId) {
     userService.delete(userId);
@@ -66,6 +72,7 @@ public class UserController {
         .build();
   }
 
+  @Operation(summary = "다건 조회", description = "전체 사용자 목록을 조회합니다.")
   @GetMapping
   public ResponseEntity<List<UserDto>> findAll() {
     List<UserDto> users = userService.findAll();
@@ -74,6 +81,7 @@ public class UserController {
         .body(users);
   }
 
+  @Operation(summary = "상태 정보 조회", description = "사용자 ID로 사용자 상태 정보를 조회합니다.")
   @PatchMapping("/{userId}/userStatus")
   public ResponseEntity<UserStatus> updateUserStatusByUserId(@PathVariable UUID userId,
       @RequestBody UserStatusUpdateRequest request) {
