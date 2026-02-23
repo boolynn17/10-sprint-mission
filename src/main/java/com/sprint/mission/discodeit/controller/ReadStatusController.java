@@ -36,7 +36,7 @@ public class ReadStatusController {
         .body(createdReadStatus);
   }
 
-  @PatchMapping
+  @PatchMapping("/{readStatusId}")
   public ResponseEntity<ReadStatus> update(@PathVariable UUID readStatusId,
       @RequestBody ReadStatusUpdateRequest request) {
     ReadStatus updatedReadStatus = readStatusService.update(readStatusId, request);
