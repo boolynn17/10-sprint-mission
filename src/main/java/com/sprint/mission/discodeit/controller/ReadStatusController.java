@@ -34,10 +34,17 @@ public class ReadStatusController {
   @Operation(summary = "생성", description = "사용자 및 채널 ID와 조회한 시간을 받아 상태 정보를 생성합니다.")
   @PostMapping
   public ResponseEntity<ReadStatus> create(@RequestBody ReadStatusCreateRequest request) {
-    ReadStatus createdReadStatus = readStatusService.create(request);
-    return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(createdReadStatus);
+    List<ReadStatus> userReadStatuses = readStatusService.findAllByUserId(request.userId());
+
+    boolean isDuplicate = userReadStatuses.stream()
+        .anyMatch(rs -> rs.getChannelId().equals(request.channelId()));
+
+    if (isDuplicate) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    ReadStatus created = readStatusService.create(request);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }
 
   @Operation(summary = "정보 수정", description = "마지막으로 조회한 시간을 받아 상태 정보를 수정합니다.")

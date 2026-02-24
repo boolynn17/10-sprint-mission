@@ -87,11 +87,16 @@ public class BasicUserService implements UserService {
 
     String newUsername = userUpdateRequest.newUsername();
     String newEmail = userUpdateRequest.newEmail();
-    if (userRepository.existsByEmail(newEmail)) {
-      throw new IllegalArgumentException("User with email " + newEmail + " already exists");
+
+    if (!user.getEmail().equals(newEmail)) {
+      if (userRepository.existsByEmail(newEmail)) {
+        throw new IllegalArgumentException("User with email " + newEmail + " already exists");
+      }
     }
-    if (userRepository.existsByUsername(newUsername)) {
-      throw new IllegalArgumentException("User with username " + newUsername + " already exists");
+    if (!user.getUsername().equals(newUsername)) {
+      if (userRepository.existsByUsername(newUsername)) {
+        throw new IllegalArgumentException("User with username " + newUsername + " already exists");
+      }
     }
 
     UUID nullableProfileId = optionalProfileCreateRequest

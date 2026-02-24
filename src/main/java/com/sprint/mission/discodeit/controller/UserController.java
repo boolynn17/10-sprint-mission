@@ -81,7 +81,7 @@ public class UserController {
         .body(users);
   }
 
-  @Operation(summary = "상태 정보 조회", description = "사용자 ID로 사용자 상태 정보를 조회합니다.")
+  @Operation(summary = "상태 정보 수정", description = "사용자 ID로 사용자 상태 정보를 수정합니다.")
   @PatchMapping("/{userId}/userStatus")
   public ResponseEntity<UserStatus> updateUserStatusByUserId(@PathVariable UUID userId,
       @RequestBody UserStatusUpdateRequest request) {
