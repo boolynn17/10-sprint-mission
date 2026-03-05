@@ -1,46 +1,50 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
+@Entity
+@Table(name = "messages")
 @Getter
-public class Message implements Serializable {
+@NoArgsConstructor
+public class Message extends BaseUpdatableEntity {
 
-  private static final long serialVersionUID = 1L;
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String content;
 
-  private UUID id;
-  private Instant createdAt;
-  private Instant updatedAt;
-  //
-  private String content;
-  //
-  private UUID channelId;
-  private UUID authorId;
-  private List<UUID> attachmentIds;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "channel_id", nullable = false)
+    private Channel channel;
 
-  public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
-    this.id = UUID.randomUUID();
-    this.createdAt = Instant.now();
-    //
-    this.content = content;
-    this.channelId = channelId;
-    this.authorId = authorId;
-    this.attachmentIds = attachmentIds;
-  }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
 
-  public void update(String newContent) {
-    boolean anyValueUpdated = false;
-    if (newContent != null && !newContent.equals(this.content)) {
-      this.content = newContent;
-      anyValueUpdated = true;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(
+            name = "message_attachments",
+            joinColumns = @JoinColumn(name = "message_id"),
+            inverseJoinColumns = @JoinColumn(name = "binary_content_id")
+    )
+    private List<BinaryContent> attachments;
+
+    public Message(String content, Channel channel, User author, List<BinaryContent> attachments) {
+        this.content = content;
+        this.channel = channel;
+        this.author = author;
+        this.attachments = attachments;
     }
 
-    if (anyValueUpdated) {
-      this.updatedAt = Instant.now();
+    public void update(String newContent, List<BinaryContent> newAttachments) {
+        if (newContent != null && !newContent.equals(this.content)) {
+            this.content = newContent;
+        }
+        if (newAttachments != null && !newAttachments.equals(this.attachments)) {
+            this.attachments = newAttachments;
+        }
     }
-  }
 }

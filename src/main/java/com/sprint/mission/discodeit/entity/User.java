@@ -1,56 +1,56 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.UUID;
-
+@Entity
+@Table(name = "users")
 @Getter
-public class User implements Serializable {
+@NoArgsConstructor
+public class User extends BaseUpdatableEntity {
 
-  private static final long serialVersionUID = 1L;
+    @Column(nullable = false, unique = true)
+    private String username;
 
-  private UUID id;
-  private Instant createdAt;
-  private Instant updatedAt;
-  //
-  private String username;
-  private String email;
-  private String password;
-  private UUID profileId;     // BinaryContent
+    @Column(nullable = false, unique = true)
+    private String email;
 
-  public User(String username, String email, String password, UUID profileId) {
-    this.id = UUID.randomUUID();
-    this.createdAt = Instant.now();
-    //
-    this.username = username;
-    this.email = email;
-    this.password = password;
-    this.profileId = profileId;
-  }
+    @Column(nullable = false)
+    private String password;
 
-  public void update(String newUsername, String newEmail, String newPassword, UUID newProfileId) {
-    boolean anyValueUpdated = false;
-    if (newUsername != null && !newUsername.equals(this.username)) {
-      this.username = newUsername;
-      anyValueUpdated = true;
-    }
-    if (newEmail != null && !newEmail.equals(this.email)) {
-      this.email = newEmail;
-      anyValueUpdated = true;
-    }
-    if (newPassword != null && !newPassword.equals(this.password)) {
-      this.password = newPassword;
-      anyValueUpdated = true;
-    }
-    if (newProfileId != null && !newProfileId.equals(this.profileId)) {
-      this.profileId = newProfileId;
-      anyValueUpdated = true;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    private BinaryContent profile;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserStatus status;
+
+    public User(String username, String email, String password, BinaryContent profile, UserStatus status) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.profile = profile;
+        this.status = status;
     }
 
-    if (anyValueUpdated) {
-      this.updatedAt = Instant.now();
+    public void update(String newUsername, String newEmail, String newPassword,
+                       BinaryContent newProfile, UserStatus newStatus) {
+        if (newUsername != null && !newUsername.equals(this.username)) {
+            this.username = newUsername;
+        }
+        if (newEmail != null && !newEmail.equals(this.email)) {
+            this.email = newEmail;
+        }
+        if (newPassword != null && !newPassword.equals(this.password)) {
+            this.password = newPassword;
+        }
+        if (newProfile != null && !newProfile.equals(this.profile)) {
+            this.profile = newProfile;
+        }
+        if (newStatus != null && !newStatus.equals(this.status)) {
+            this.status = newStatus;
+        }
     }
-  }
 }
