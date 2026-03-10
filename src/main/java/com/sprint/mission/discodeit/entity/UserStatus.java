@@ -4,6 +4,7 @@ import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -11,6 +12,7 @@ import java.time.Instant;
 @Entity
 @Table(name = "user_status")
 @Getter
+@Setter
 @NoArgsConstructor
 public class UserStatus extends BaseUpdatableEntity {
 
@@ -34,7 +36,7 @@ public class UserStatus extends BaseUpdatableEntity {
 
     public Boolean isOnline() {
         if (this.lastActiveAt == null) return false;
-        
+
         Instant instantFiveMinutesAgo = Instant.now().minus(Duration.ofMinutes(5));
         return lastActiveAt.isAfter(instantFiveMinutesAgo);
     }
