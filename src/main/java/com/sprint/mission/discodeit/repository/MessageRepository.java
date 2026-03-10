@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.repository;
 
+import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,6 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
     List<Message> findAllByChannelId(UUID channelId);
 
     void deleteAllByChannelId(UUID channelId);
+
+    Optional<Message> findTopByChannelOrderByCreatedAtDesc(Channel channel);
 }
