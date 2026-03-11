@@ -29,7 +29,7 @@ public class ChannelMapper {
 
         // 참여자 목록
         List<UserDto> participants = readStatusRepository.findAllByChannel(channel).stream()
-                .map(status -> userMapper.toDto(status.getUser(), false))
+                .map(status -> userMapper.toDto(status.getUser()))
                 .toList();
 
         return new ChannelDto(

@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface ReadStatusRepository extends JpaRepository<ReadStatus, UUID> {
 
 
-    List<ReadStatus> findAllByUser(UUID userId);
+    List<ReadStatus> findAllByUserId(UUID userId);
 
     List<ReadStatus> findAllByChannel(Channel channel);
 

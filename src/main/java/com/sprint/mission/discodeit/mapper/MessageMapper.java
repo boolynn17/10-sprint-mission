@@ -27,7 +27,7 @@ public class MessageMapper {
                 message.getUpdatedAt(),
                 message.getContent(),
                 message.getChannel().getId(),
-                userMapper.toDto(message.getAuthor(), false),
+                userMapper.toDto(message.getAuthor()),
                 attachments
         );
     }
