@@ -13,5 +13,5 @@ spring:
 
 logging:
   level:
-    come.discodeit: INFO
+    com.discodeit: INFO
     org.hibernate.SQL: INFO
