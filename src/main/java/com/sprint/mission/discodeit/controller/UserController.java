@@ -44,6 +44,8 @@ public class UserController implements UserApi {
       @RequestPart("userCreateRequest") UserCreateRequest userCreateRequest,
       @RequestPart(value = "profile", required = false) MultipartFile profile
   ) {
+    // INFO
+    log.info("User 생성 요청: username={}", userCreateRequest.username());
     Optional<BinaryContentCreateRequest> profileRequest = Optional.ofNullable(profile)
         .flatMap(this::resolveProfileRequest);
     UserDto createdUser = userService.create(userCreateRequest, profileRequest);
@@ -62,9 +64,18 @@ public class UserController implements UserApi {
       @RequestPart("userUpdateRequest") UserUpdateRequest userUpdateRequest,
       @RequestPart(value = "profile", required = false) MultipartFile profile
   ) {
+    // INFO
+    log.info("User 수정 요청: id={}", userId);
+
     Optional<BinaryContentCreateRequest> profileRequest = Optional.ofNullable(profile)
         .flatMap(this::resolveProfileRequest);
+
     UserDto updatedUser = userService.update(userId, userUpdateRequest, profileRequest);
+
+    // DEBUG
+    log.debug("User 수정 응답 완료: newName={}, newEmail={}, newPassword={}",
+            userUpdateRequest.newUsername(), userUpdateRequest.newEmail(), userUpdateRequest.newPassword());
+
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(updatedUser);
@@ -73,7 +84,14 @@ public class UserController implements UserApi {
   @DeleteMapping(path = "{userId}")
   @Override
   public ResponseEntity<Void> delete(@PathVariable("userId") UUID userId) {
+    // INFO
+    log.info("User 삭제 요청: id={}", userId);
+
     userService.delete(userId);
+
+    // DEBUG
+    log.debug("User 삭제 요청 응답 완료: id={}", userId);
+
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .build();
@@ -82,6 +100,8 @@ public class UserController implements UserApi {
   @GetMapping
   @Override
   public ResponseEntity<List<UserDto>> findAll() {
+    // INFO
+    log.info("User 다건 조회 요청");
     List<UserDto> users = userService.findAll();
     return ResponseEntity
         .status(HttpStatus.OK)
@@ -92,7 +112,13 @@ public class UserController implements UserApi {
   @Override
   public ResponseEntity<UserStatusDto> updateUserStatusByUserId(@PathVariable("userId") UUID userId,
       @RequestBody UserStatusUpdateRequest request) {
+    // INFO
+    log.info("User 상태 수정 요청: userId={}", userId);
+
     UserStatusDto updatedUserStatus = userStatusService.updateByUserId(userId, request);
+
+    // DEBUG
+    log.debug("User 상태 수정 응답: userId={}, lastActivateAt={}", userId, request.newLastActiveAt());
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(updatedUserStatus);
@@ -110,7 +136,9 @@ public class UserController implements UserApi {
         );
         return Optional.of(binaryContentCreateRequest);
       } catch (IOException e) {
-        throw new RuntimeException(e);
+        // ERROR
+        log.error("프로필 처리 중 오류 발생: fileName={}", profileFile.getOriginalFilename(), e);
+        throw new RuntimeException("파일 처리 실패", e);
       }
     }
   }

@@ -23,11 +23,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BasicMessageService implements MessageService {
@@ -45,6 +47,8 @@ public class BasicMessageService implements MessageService {
   @Override
   public MessageDto create(MessageCreateRequest messageCreateRequest,
       List<BinaryContentCreateRequest> binaryContentCreateRequests) {
+    // INFO
+    log.info("Message 생성 시작: content={}", messageCreateRequest.content());
     UUID channelId = messageCreateRequest.channelId();
     UUID authorId = messageCreateRequest.authorId();
 
@@ -62,6 +66,8 @@ public class BasicMessageService implements MessageService {
           String contentType = attachmentRequest.contentType();
           byte[] bytes = attachmentRequest.bytes();
 
+          // DEBUG
+          log.debug("파일 업로드 중: fileName={}", attachmentRequest.fileName());
           BinaryContent binaryContent = new BinaryContent(fileName, (long) bytes.length,
               contentType);
           binaryContentRepository.save(binaryContent);
@@ -79,12 +85,17 @@ public class BasicMessageService implements MessageService {
     );
 
     messageRepository.save(message);
+
+    // INFO
+    log.info("Message 생성 완료: content={}", message.getContent());
     return messageMapper.toDto(message);
   }
 
   @Transactional(readOnly = true)
   @Override
   public MessageDto find(UUID messageId) {
+    // INFO
+    log.info("Message 조회 시도: messageId={}", messageId);
     return messageRepository.findById(messageId)
         .map(messageMapper::toDto)
         .orElseThrow(
@@ -95,6 +106,8 @@ public class BasicMessageService implements MessageService {
   @Override
   public PageResponse<MessageDto> findAllByChannelId(UUID channelId, Instant createAt,
       Pageable pageable) {
+    // INFO
+    log.info("Channel의 Message 다건 조회 시도: channelId={}", channelId);
     Slice<MessageDto> slice = messageRepository.findAllByChannelIdWithAuthor(channelId,
             Optional.ofNullable(createAt).orElse(Instant.now()),
             pageable)
@@ -112,21 +125,32 @@ public class BasicMessageService implements MessageService {
   @Transactional
   @Override
   public MessageDto update(UUID messageId, MessageUpdateRequest request) {
+    // INFO
+    log.info("Message 수정 시작: messageId={}, newContent={}", messageId, request.newContent());
     String newContent = request.newContent();
     Message message = messageRepository.findById(messageId)
         .orElseThrow(
             () -> new NoSuchElementException("Message with id " + messageId + " not found"));
     message.update(newContent);
+
+    // INFO
+    log.info("Message 수정 완료: messageId={}, newContent={}", messageId, message.getContent());
+
     return messageMapper.toDto(message);
   }
 
   @Transactional
   @Override
   public void delete(UUID messageId) {
+    // INFO
+    log.info("Message 삭제 시작: messageId={}", messageId);
     if (!messageRepository.existsById(messageId)) {
       throw new NoSuchElementException("Message with id " + messageId + " not found");
     }
 
     messageRepository.deleteById(messageId);
+
+    // INFO
+    log.info("Message 삭제 완료: messageId={}", messageId);
   }
 }

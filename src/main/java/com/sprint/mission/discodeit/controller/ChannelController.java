@@ -32,6 +32,8 @@ public class ChannelController implements ChannelApi {
 
   @PostMapping(path = "public")
   public ResponseEntity<ChannelDto> create(@RequestBody PublicChannelCreateRequest request) {
+    // INFO
+    log.info("Public Channel 생성 요청: name={}, description={}", request.name(), request.description());
     ChannelDto createdChannel = channelService.create(request);
     return ResponseEntity
         .status(HttpStatus.CREATED)
@@ -40,6 +42,8 @@ public class ChannelController implements ChannelApi {
 
   @PostMapping(path = "private")
   public ResponseEntity<ChannelDto> create(@RequestBody PrivateChannelCreateRequest request) {
+    // INFO
+    log.info("Private Channel 생성 요청: participants={}", request.participantIds());
     ChannelDto createdChannel = channelService.create(request);
     return ResponseEntity
         .status(HttpStatus.CREATED)
@@ -49,7 +53,14 @@ public class ChannelController implements ChannelApi {
   @PatchMapping(path = "{channelId}")
   public ResponseEntity<ChannelDto> update(@PathVariable("channelId") UUID channelId,
       @RequestBody PublicChannelUpdateRequest request) {
+    // INFO
+    log.info("Channel 수정 요청: id={}", channelId);
+
     ChannelDto updatedChannel = channelService.update(channelId, request);
+
+    // DEBUG
+    log.debug("Channel 수정 응답 완료: newName={}, newdescription={}", request.newName(), request.newDescription());
+
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(updatedChannel);
@@ -57,7 +68,14 @@ public class ChannelController implements ChannelApi {
 
   @DeleteMapping(path = "{channelId}")
   public ResponseEntity<Void> delete(@PathVariable("channelId") UUID channelId) {
+    // INFO
+    log.info("Channel 삭제 요청: id={}", channelId);
+
     channelService.delete(channelId);
+
+    // DEBUG
+    log.debug("Channel 삭제 응답 완료: id={}", channelId);
+
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .build();
@@ -65,6 +83,8 @@ public class ChannelController implements ChannelApi {
 
   @GetMapping
   public ResponseEntity<List<ChannelDto>> findAll(@RequestParam("userId") UUID userId) {
+    // INFO
+    log.info("User의 Channel 목록 다건 조회 요청: userId={}", userId);
     List<ChannelDto> channels = channelService.findAllByUserId(userId);
     return ResponseEntity
         .status(HttpStatus.OK)

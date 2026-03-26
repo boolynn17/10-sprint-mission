@@ -46,6 +46,8 @@ public class MessageController implements MessageApi {
       @RequestPart("messageCreateRequest") MessageCreateRequest messageCreateRequest,
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments
   ) {
+    // INFO
+    log.info("Message 생성 요청: content={}", messageCreateRequest.content());
     List<BinaryContentCreateRequest> attachmentRequests = Optional.ofNullable(attachments)
         .map(files -> files.stream()
             .map(file -> {
@@ -56,7 +58,9 @@ public class MessageController implements MessageApi {
                     file.getBytes()
                 );
               } catch (IOException e) {
-                throw new RuntimeException(e);
+                // ERROR
+                log.error("메시지 파일 첨부 중 오류 발생: fileName={}", file.getOriginalFilename());
+                throw new RuntimeException("파일 처리 실패", e);
               }
             })
             .toList())
@@ -70,7 +74,12 @@ public class MessageController implements MessageApi {
   @PatchMapping(path = "{messageId}")
   public ResponseEntity<MessageDto> update(@PathVariable("messageId") UUID messageId,
       @RequestBody MessageUpdateRequest request) {
+    // INFO
+    log.info("Message 수정 요청: messageId={}", messageId);
     MessageDto updatedMessage = messageService.update(messageId, request);
+
+    // DEBUG
+    log.debug("Message 수정 응답 완료: messageId={}, newContent={}", messageId, request.newContent());
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(updatedMessage);
@@ -78,7 +87,14 @@ public class MessageController implements MessageApi {
 
   @DeleteMapping(path = "{messageId}")
   public ResponseEntity<Void> delete(@PathVariable("messageId") UUID messageId) {
+    // INFO
+    log.info("Message 삭제 요청: messageId={}", messageId);
+
     messageService.delete(messageId);
+
+    // DEBUG
+    log.debug("Message 삭제 응답 완료: messageId={}", messageId);
+
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .build();
@@ -94,6 +110,8 @@ public class MessageController implements MessageApi {
           sort = "createdAt",
           direction = Direction.DESC
       ) Pageable pageable) {
+    // INFO
+    log.info("Channel의 Message 다건 조회 요청: ChannelId={}", channelId);
     PageResponse<MessageDto> messages = messageService.findAllByChannelId(channelId, cursor,
         pageable);
     return ResponseEntity
