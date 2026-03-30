@@ -7,7 +7,7 @@ import java.util.Map;
 public class UserAlreadyExistException extends UserException {
 
     // 기본 생성자
-    public UserAlreadyExistException(ErrorCode errorCode, String value) {
+    private UserAlreadyExistException(ErrorCode errorCode, String value) {
         super(errorCode, Map.of("duplicateValue", value));
     }
 
