@@ -1,5 +1,7 @@
 package com.sprint.mission.discodeit.exception;
 
+import java.time.Instant;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -12,30 +14,43 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(IllegalArgumentException.class)
-  public ResponseEntity<String> handleException(IllegalArgumentException e) {
-    // WARN: 잘못된 요청
-    log.warn("잘못된 요청: {}", e.getMessage());
-    return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body(e.getMessage());
-  }
+  @ExceptionHandler(DiscodeitException.class)
+  public ResponseEntity<ErrorResponse> handleDiscodeitException(DiscodeitException e) {
+    ErrorCode errorCode = e.getErrorCode();
 
-  @ExceptionHandler(NoSuchElementException.class)
-  public ResponseEntity<String> handleException(NoSuchElementException e) {
-    // WARN: 데이터를 찾지 못한 경우
-    log.warn("데이터를 찾을 수 없음: {}", e.getMessage());
+    ErrorResponse response = ErrorResponse.builder()
+            .timestamp(Instant.now())
+            .code(errorCode.getCode())
+            .message(errorCode.getMessage())
+            .details(e.getDetails())
+            .exceptionType(e.getClass().getSimpleName())
+            .status(errorCode.getStatus().value())
+            .build();
+
+    log.warn("예외 발생 {} : {}", response.getExceptionType(), response.getMessage());
+
     return ResponseEntity
-        .status(HttpStatus.NOT_FOUND)
-        .body(e.getMessage());
+            .status(errorCode.getStatus())
+            .body(response);
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<String> handleException(Exception e) {
-    // ERROR: 예상치 못한 서버 내부 에러
+  public ResponseEntity<ErrorResponse> handleException(Exception e) {
+    ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+
+    ErrorResponse response = ErrorResponse.builder()
+            .timestamp(Instant.now())
+            .code(errorCode.getCode())
+            .message(errorCode.getMessage())
+            .details(Map.of("reason", e.getMessage() != null ? e.getMessage() : "No message available"))
+            .exceptionType(e.getClass().getSimpleName())
+            .status(errorCode.getStatus().value())
+            .build();
+
     log.error("서버 내부 오류 발생", e);
+
     return ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(e.getMessage());
+            .status(errorCode.getStatus())
+            .body(response);
   }
 }
