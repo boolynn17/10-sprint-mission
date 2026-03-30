@@ -40,9 +40,6 @@ public class BasicUserService implements UserService {
     @Override
     public UserDto create(UserCreateRequest userCreateRequest,
                           Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
-        // INFO
-        log.info("User 생성 시작: name={}", userCreateRequest.username());
-
         String username = userCreateRequest.username();
         String email = userCreateRequest.email();
 
@@ -86,8 +83,6 @@ public class BasicUserService implements UserService {
 
     @Override
     public UserDto find(UUID userId) {
-        // INFO
-        log.info("User 조회 시도: id={}", userId);
         return userRepository.findById(userId)
                 .map(userMapper::toDto)
                 .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
@@ -107,9 +102,6 @@ public class BasicUserService implements UserService {
     @Override
     public UserDto update(UUID userId, UserUpdateRequest userUpdateRequest,
                           Optional<BinaryContentCreateRequest> optionalProfileCreateRequest) {
-        // INFO
-        log.info("User 수정 시작: userId={}", userId);
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
 
@@ -152,8 +144,6 @@ public class BasicUserService implements UserService {
     @Transactional
     @Override
     public void delete(UUID userId) {
-        // INFO
-        log.info("User 삭제 시작: userId={}", userId);
         if (!userRepository.existsById(userId)) {
             throw new NoSuchElementException("User with id " + userId + " not found");
         }

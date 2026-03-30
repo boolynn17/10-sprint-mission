@@ -72,10 +72,6 @@ public class UserController implements UserApi {
 
     UserDto updatedUser = userService.update(userId, userUpdateRequest, profileRequest);
 
-    // DEBUG
-    log.debug("User 수정 응답 완료: newName={}, newEmail={}",
-            userUpdateRequest.newUsername(), userUpdateRequest.newEmail());
-
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(updatedUser);
@@ -88,9 +84,6 @@ public class UserController implements UserApi {
     log.info("User 삭제 요청: id={}", userId);
 
     userService.delete(userId);
-
-    // DEBUG
-    log.debug("User 삭제 요청 응답 완료: id={}", userId);
 
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
@@ -117,8 +110,6 @@ public class UserController implements UserApi {
 
     UserStatusDto updatedUserStatus = userStatusService.updateByUserId(userId, request);
 
-    // DEBUG
-    log.debug("User 상태 수정 응답: userId={}, lastActivateAt={}", userId, request.newLastActiveAt());
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(updatedUserStatus);

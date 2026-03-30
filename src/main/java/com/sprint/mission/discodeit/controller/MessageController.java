@@ -78,8 +78,6 @@ public class MessageController implements MessageApi {
     log.info("Message 수정 요청: messageId={}", messageId);
     MessageDto updatedMessage = messageService.update(messageId, request);
 
-    // DEBUG
-    log.debug("Message 수정 응답 완료: messageId={}", messageId);
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(updatedMessage);
@@ -91,9 +89,6 @@ public class MessageController implements MessageApi {
     log.info("Message 삭제 요청: messageId={}", messageId);
 
     messageService.delete(messageId);
-
-    // DEBUG
-    log.debug("Message 삭제 응답 완료: messageId={}", messageId);
 
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)

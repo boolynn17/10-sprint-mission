@@ -27,8 +27,6 @@ public class BasicBinaryContentService implements BinaryContentService {
   @Transactional
   @Override
   public BinaryContentDto create(BinaryContentCreateRequest request) {
-    // INFO: 생성 시작
-    log.info("BinaryContent 생성 시작: fileName={}", request.fileName());
 
     String fileName = request.fileName();
     byte[] bytes = request.bytes();
@@ -49,8 +47,6 @@ public class BasicBinaryContentService implements BinaryContentService {
 
   @Override
   public BinaryContentDto find(UUID binaryContentId) {
-    // DEBUG
-    log.debug("BinaryContent 조회 시도: id={}", binaryContentId);
     return binaryContentRepository.findById(binaryContentId)
         .map(binaryContentMapper::toDto)
         .orElseThrow(() -> new NoSuchElementException("BinaryContent with id " + binaryContentId + " not found"));
@@ -58,8 +54,6 @@ public class BasicBinaryContentService implements BinaryContentService {
 
   @Override
   public List<BinaryContentDto> findAllByIdIn(List<UUID> binaryContentIds) {
-    // DEBUG
-    log.debug("BinaryContent 다건 조회 시도: count={}", binaryContentIds.size());
     return binaryContentRepository.findAllById(binaryContentIds).stream()
         .map(binaryContentMapper::toDto)
         .toList();
@@ -68,8 +62,6 @@ public class BasicBinaryContentService implements BinaryContentService {
   @Transactional
   @Override
   public void delete(UUID binaryContentId) {
-    // INFO: 삭제 시작
-    log.info("BinaryContent 삭제 시작: id={}", binaryContentId);
     if (!binaryContentRepository.existsById(binaryContentId)) {
       throw new NoSuchElementException("BinaryContent with id " + binaryContentId + " not found");
     }

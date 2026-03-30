@@ -58,9 +58,6 @@ public class ChannelController implements ChannelApi {
 
     ChannelDto updatedChannel = channelService.update(channelId, request);
 
-    // DEBUG
-    log.debug("Channel 수정 응답 완료: newName={}, newdescription={}", request.newName(), request.newDescription());
-
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(updatedChannel);
@@ -72,9 +69,6 @@ public class ChannelController implements ChannelApi {
     log.info("Channel 삭제 요청: id={}", channelId);
 
     channelService.delete(channelId);
-
-    // DEBUG
-    log.debug("Channel 삭제 응답 완료: id={}", channelId);
 
     return ResponseEntity
         .status(HttpStatus.NO_CONTENT)

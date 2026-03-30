@@ -47,8 +47,6 @@ public class BasicMessageService implements MessageService {
   @Override
   public MessageDto create(MessageCreateRequest messageCreateRequest,
       List<BinaryContentCreateRequest> binaryContentCreateRequests) {
-    // INFO
-    log.info("Message 생성 시작: content={}", messageCreateRequest.content());
     UUID channelId = messageCreateRequest.channelId();
     UUID authorId = messageCreateRequest.authorId();
 
@@ -94,8 +92,6 @@ public class BasicMessageService implements MessageService {
   @Transactional(readOnly = true)
   @Override
   public MessageDto find(UUID messageId) {
-    // INFO
-    log.info("Message 조회 시도: messageId={}", messageId);
     return messageRepository.findById(messageId)
         .map(messageMapper::toDto)
         .orElseThrow(
@@ -106,8 +102,6 @@ public class BasicMessageService implements MessageService {
   @Override
   public PageResponse<MessageDto> findAllByChannelId(UUID channelId, Instant createAt,
       Pageable pageable) {
-    // INFO
-    log.info("Channel의 Message 다건 조회 시도: channelId={}", channelId);
     Slice<MessageDto> slice = messageRepository.findAllByChannelIdWithAuthor(channelId,
             Optional.ofNullable(createAt).orElse(Instant.now()),
             pageable)
@@ -125,8 +119,6 @@ public class BasicMessageService implements MessageService {
   @Transactional
   @Override
   public MessageDto update(UUID messageId, MessageUpdateRequest request) {
-    // INFO
-    log.info("Message 수정 시작: messageId={}, newContent={}", messageId, request.newContent());
     String newContent = request.newContent();
     Message message = messageRepository.findById(messageId)
         .orElseThrow(
@@ -142,8 +134,6 @@ public class BasicMessageService implements MessageService {
   @Transactional
   @Override
   public void delete(UUID messageId) {
-    // INFO
-    log.info("Message 삭제 시작: messageId={}", messageId);
     if (!messageRepository.existsById(messageId)) {
       throw new NoSuchElementException("Message with id " + messageId + " not found");
     }
