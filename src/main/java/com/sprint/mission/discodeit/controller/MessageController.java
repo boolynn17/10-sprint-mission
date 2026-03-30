@@ -79,7 +79,7 @@ public class MessageController implements MessageApi {
     MessageDto updatedMessage = messageService.update(messageId, request);
 
     // DEBUG
-    log.debug("Message 수정 응답 완료: messageId={}, newContent={}", messageId, request.newContent());
+    log.debug("Message 수정 응답 완료: messageId={}", messageId);
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(updatedMessage);

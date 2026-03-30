@@ -73,8 +73,8 @@ public class UserController implements UserApi {
     UserDto updatedUser = userService.update(userId, userUpdateRequest, profileRequest);
 
     // DEBUG
-    log.debug("User 수정 응답 완료: newName={}, newEmail={}, newPassword={}",
-            userUpdateRequest.newUsername(), userUpdateRequest.newEmail(), userUpdateRequest.newPassword());
+    log.debug("User 수정 응답 완료: newName={}, newEmail={}",
+            userUpdateRequest.newUsername(), userUpdateRequest.newEmail());
 
     return ResponseEntity
         .status(HttpStatus.OK)
