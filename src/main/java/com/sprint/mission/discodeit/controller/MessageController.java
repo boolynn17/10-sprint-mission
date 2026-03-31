@@ -52,7 +52,7 @@ public class MessageController implements MessageApi {
       @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments
   ) {
     // INFO
-    log.info("Message 생성 요청: content={}", messageCreateRequest.content());
+    log.info("Message 생성 요청");
     List<BinaryContentCreateRequest> attachmentRequests = Optional.ofNullable(attachments)
         .map(files -> files.stream()
             .map(file -> {

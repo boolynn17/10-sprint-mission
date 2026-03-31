@@ -91,8 +91,6 @@ public class BasicUserService implements UserService {
 
     @Override
     public List<UserDto> findAll() {
-        // INFO
-        log.info("전체 User 다건 조회 시도");
         return userRepository.findAllWithProfileAndStatus()
                 .stream()
                 .map(userMapper::toDto)

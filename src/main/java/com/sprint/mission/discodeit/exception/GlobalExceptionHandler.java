@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     ErrorCode errorCode = e.getErrorCode();
 
     ErrorResponse response = ErrorResponse.builder()
-            .timestamp(Instant.now())
+            .timestamp(e.getTimestamp())
             .code(errorCode.getCode())
             .message(errorCode.getMessage())
             .details(e.getDetails())

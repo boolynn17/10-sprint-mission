@@ -88,7 +88,7 @@ public class BasicMessageService implements MessageService {
     messageRepository.save(message);
 
     // INFO
-    log.info("Message 생성 완료: content={}", message.getContent());
+    log.info("Message 생성 완료");
     return messageMapper.toDto(message);
   }
 
@@ -129,7 +129,7 @@ public class BasicMessageService implements MessageService {
     message.update(newContent);
 
     // INFO
-    log.info("Message 수정 완료: messageId={}, newContent={}", messageId, message.getContent());
+    log.info("Message 수정 완료: messageId={}", messageId);
 
     return messageMapper.toDto(message);
   }
