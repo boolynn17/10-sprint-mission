@@ -31,19 +31,20 @@ public class S3BinaryContentStorage implements BinaryContentStorage {
     private final String secretKey;
     private final String region;
     private final String bucket;
-
-    private static final long PRESIGNED_URL_EXPIRATION = 600L;
+    private final long presignedUrlExpiration;
 
     public S3BinaryContentStorage(
             @Value("${discodeit.storage.s3.access-key}") String accessKey,
             @Value("${discodeit.storage.s3.secret-key}") String secretKey,
             @Value("${discodeit.storage.s3.region}") String region,
-            @Value("${discodeit.storage.s3.bucket}") String bucket
+            @Value("${discodeit.storage.s3.bucket}") String bucket,
+            @Value("${discodeit.storage.s3.presigned-url-expiration:600}") long presignedUrlExpiration
     ) {
         this.accessKey = accessKey;
         this.secretKey = secretKey;
         this.region = region;
         this.bucket = bucket;
+        this.presignedUrlExpiration = presignedUrlExpiration;
     }
 
     @Override
@@ -107,7 +108,7 @@ public class S3BinaryContentStorage implements BinaryContentStorage {
                     .build();
 
             GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-                    .signatureDuration(Duration.ofSeconds(PRESIGNED_URL_EXPIRATION))
+                    .signatureDuration(Duration.ofSeconds(presignedUrlExpiration))
                     .getObjectRequest(getObjectRequest)
                     .build();
 
