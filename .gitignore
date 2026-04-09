@@ -44,5 +44,4 @@ bin/
 ### 숨김 파일 ###
 .*
 !.gitignore
-
-src/test/resources/application-s3test.properties
+!.dockerignore
