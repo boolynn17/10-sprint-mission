@@ -1,32 +1,54 @@
 package com.sprint.mission.discodeit.storage.s3;
 
 import com.sprint.mission.discodeit.dto.data.BinaryContentDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.Properties;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = S3BinaryContentStorage.class)
+@ActiveProfiles("s3test")
 class S3BinaryContentStorageTest {
 
-    @Autowired
     private S3BinaryContentStorage storage;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        System.out.println("Working dir: " + Paths.get(".").toAbsolutePath());
+
+        Properties props = new Properties();
+        try (InputStream is = new FileInputStream(".env")) {
+            props.load(is);
+        }
+
+        storage = new S3BinaryContentStorage(
+                props.getProperty("AWS_S3_ACCESS_KEY"),
+                props.getProperty("AWS_S3_SECRET_KEY"),
+                props.getProperty("AWS_S3_REGION"),
+                props.getProperty("AWS_S3_BUCKET")
+        );
+    }
 
     // put: S3에 업로드하고 binaryContentId 반환
     @Test
     void put_test() {
         UUID id = UUID.randomUUID();
-        byte[] data = "hello s3".getBytes();
-
-        UUID result = storage.put(id, data);
-
+        UUID result = storage.put(id, "hello s3".getBytes());
         assertThat(result).isEqualTo(id);
     }
 
@@ -34,13 +56,10 @@ class S3BinaryContentStorageTest {
     @Test
     void get_test() throws Exception {
         UUID id = UUID.randomUUID();
-        byte[] data = "get test content".getBytes();
-        storage.put(id, data);
+        storage.put(id, "get test content".getBytes());
 
         InputStream result = storage.get(id);
-
-        assertThat(result).isNotNull();
-        assertThat(result.readAllBytes()).isEqualTo(data);
+        assertThat(result.readAllBytes()).isEqualTo("get test content".getBytes());
     }
 
     // download: 302 리다이렉트와 PresignedUrl 헤더를 반환
@@ -55,9 +74,7 @@ class S3BinaryContentStorageTest {
         ResponseEntity<Void> response = (ResponseEntity<Void>) storage.download(dto);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-
-        String location = response.getHeaders().getFirst(HttpHeaders.LOCATION);
-        assertThat(location).isNotNull();
-        assertThat(location).contains("binary-content/" + id);
+        assertThat(response.getHeaders().getFirst(HttpHeaders.LOCATION))
+                .contains("binary-content/" + id);
     }
 }
