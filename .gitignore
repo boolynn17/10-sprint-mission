@@ -45,3 +45,5 @@ bin/
 .*
 !.gitignore
 !.dockerignore
+
+discodeit.env
