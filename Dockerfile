@@ -16,7 +16,7 @@ COPY src src
 RUN ./gradlew clean build -x test --parallel --no-daemon
 
 # 2단계: 런타임
-FROM amazoncorretto:17-al2023-jre
+FROM amazoncorretto:17-al2023
 
 WORKDIR /app
 
