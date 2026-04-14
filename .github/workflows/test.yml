@@ -3,7 +3,7 @@ name: CI Workflow
 on:
   pull_request:
     branches:
-      - sprint8
+      - main
 
 jobs:
   test:
