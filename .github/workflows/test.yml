@@ -3,7 +3,7 @@ name: CI Workflow
 on:
   pull_request:
     branches:
-      - main  # main 브랜치에 PR이 오면 실행
+      - sprint8
 
 jobs:
   test:
