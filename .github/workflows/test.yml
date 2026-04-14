@@ -44,7 +44,7 @@ jobs:
             -f src/main/resources/schema.sql
 
       - name: 테스트
-        run: ./gradlew test --no-daemon --stacktrace 2>&1 | head -200
+        run: ./gradlew test jacocoTestReport --no-daemon --stacktrace 2>&1 | head -200
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/discodeit
           SPRING_DATASOURCE_USERNAME: discodeit_user
