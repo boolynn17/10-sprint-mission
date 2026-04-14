@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.storage.s3;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 
 @SpringBootTest
+@Tag("integration")
 public class AWSS3Test {
 
     @Autowired

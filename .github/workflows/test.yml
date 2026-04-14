@@ -37,6 +37,12 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
+      - name: schema.sql 실행
+        run: |
+          PGPASSWORD=discodeit1234 psql \
+            -h localhost -U discodeit_user -d discodeit \
+            -f src/main/resources/schema.sql
+
       - name: 테스트
         run: ./gradlew test --no-daemon
         env:
