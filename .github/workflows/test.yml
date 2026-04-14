@@ -1,0 +1,28 @@
+name: CI Workflow
+
+on:
+  pull_request:
+    branches:
+      - main  # main 브랜치에 PR이 오면 실행
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: JDK 17 설정
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: 테스트
+        run: ./gradlew test --no-daemon
+
+      - name: 테스트 결과 전송
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
