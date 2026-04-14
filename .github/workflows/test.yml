@@ -51,6 +51,12 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: discodeit1234
           STORAGE_TYPE: local
 
+      - name: 테스트 리포트 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: build/reports/tests/test/
+
       - name: 테스트 결과 전송
         uses: codecov/codecov-action@v4
         with:
