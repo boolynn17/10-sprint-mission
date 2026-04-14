@@ -57,6 +57,9 @@ tasks.named('test') {
 
 test {
     finalizedBy jacocoTestReport
+    useJUnitPlatform {
+        excludeTags 'integration'
+    }
 }
 
 jacocoTestReport {
