@@ -52,10 +52,12 @@ jobs:
           STORAGE_TYPE: local
 
       - name: 테스트 리포트 업로드
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: build/reports/tests/test/
+          if-no-files-found: warn
 
       - name: 테스트 결과 전송
         uses: codecov/codecov-action@v4
