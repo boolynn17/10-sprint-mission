@@ -16,8 +16,8 @@ jobs:
       - name: AWS 자격 증명 설정
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_S3_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_S3_SECRET_KEY }}
           # Public ECR에 배포해야 하므로 리전은 us-east-1으로 설정
           aws-region: us-east-1
 
