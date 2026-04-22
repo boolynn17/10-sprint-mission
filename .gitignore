@@ -48,3 +48,5 @@ bin/
 !.github
 
 discodeit.env
+*.pkg
+*.pem
