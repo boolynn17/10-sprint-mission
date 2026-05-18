@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
@@ -53,6 +55,14 @@ public class SecurityConfig {
                         .logoutUrl("/api/auth/logout")
                         .logoutSuccessHandler(
                                 new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT))
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                        .accessDeniedHandler((request, response, e) -> {
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            response.getWriter().write("{\"status\": 403, \"message\": \"접근 권한이 없습니다.\"}");
+                        })
                 );
         return http.build();
     }

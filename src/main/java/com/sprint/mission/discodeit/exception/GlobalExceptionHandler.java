@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,15 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorResponse> handleException(Exception e) {
-    log.error("예상치 못한 오류 발생: {}", e.getMessage(), e);
-    ErrorResponse errorResponse = new ErrorResponse(e, HttpStatus.INTERNAL_SERVER_ERROR.value());
-    return ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(errorResponse);
-  }
-
+  // 커스텀 예외
   @ExceptionHandler(DiscodeitException.class)
   public ResponseEntity<ErrorResponse> handleDiscodeitException(DiscodeitException exception) {
     log.error("커스텀 예외 발생: code={}, message={}", exception.getErrorCode(), exception.getMessage(), exception);
@@ -36,6 +29,7 @@ public class GlobalExceptionHandler {
         .body(response);
   }
 
+  // 유효성 예외
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
     log.error("요청 유효성 검사 실패: {}", ex.getMessage());
@@ -59,6 +53,25 @@ public class GlobalExceptionHandler {
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
         .body(response);
+  }
+
+  // 권한 예외
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+    log.error("접근 권한 없음: {}", ex.getMessage());
+    return ResponseEntity
+            .status(HttpStatus.FORBIDDEN)
+            .body(new ErrorResponse(ex, HttpStatus.FORBIDDEN.value()));
+  }
+
+  // 나머지 예외
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse> handleException(Exception e) {
+    log.error("예상치 못한 오류 발생: {}", e.getMessage(), e);
+    ErrorResponse errorResponse = new ErrorResponse(e, HttpStatus.INTERNAL_SERVER_ERROR.value());
+    return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(errorResponse);
   }
 
   private HttpStatus determineHttpStatus(DiscodeitException exception) {
