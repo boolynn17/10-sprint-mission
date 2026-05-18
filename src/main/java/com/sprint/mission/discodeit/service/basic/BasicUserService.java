@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -157,10 +158,14 @@ public class BasicUserService implements UserService {
 
     @Transactional
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDto updateRole(UserRoleUpdateRequest request) {
+        log.debug("사용자 권한 수정 시작: userId={}, newRole={}", request.userId(), request.newRole());
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> UserNotFoundException.withId(request.userId()));
         user.updateRole(request.newRole());
+
+        log.info("사용자 권한 수정 완료: userId={}, newRole={}", user.getId(), request.newRole());
         return userMapper.toDto(user);
     }
 }
