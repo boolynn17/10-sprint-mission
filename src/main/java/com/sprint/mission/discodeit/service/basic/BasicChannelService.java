@@ -51,7 +51,6 @@ public class BasicChannelService implements ChannelService {
 
   @Transactional
   @Override
-  @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   public ChannelDto create(PrivateChannelCreateRequest request) {
     log.debug("채널 생성 시작: {}", request);
     Channel channel = new Channel(ChannelType.PRIVATE, null, null);
