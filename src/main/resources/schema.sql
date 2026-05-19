@@ -125,3 +125,6 @@ ALTER TABLE read_statuses
         FOREIGN KEY (channel_id)
             REFERENCES channels (id)
             ON DELETE CASCADE;
+
+ALTER TABLE users
+    ADD COLUMN role varchar(20) NOT NULL DEFAULT 'USER';
