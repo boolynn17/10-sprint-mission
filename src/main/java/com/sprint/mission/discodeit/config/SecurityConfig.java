@@ -42,7 +42,13 @@ public class SecurityConfig {
                                 "/api/auth/logout",      // 로그아웃
                                 "/swagger-ui/**",        // Swagger UI (API가 아닌 요청)
                                 "/v3/api-docs/**",       // Swagger docs (API가 아닌 요청)
-                                "/actuator/**"           // Actuator (API가 아닌 요청)
+                                "/actuator/**",           // Actuator (API가 아닌 요청)
+                                "/",
+                                "/index.html",
+                                "/assets/**",
+                                "/favicon.ico",
+                                "/styles.css",
+                                "/script.js"
 
                         ).permitAll()
                         .anyRequest().authenticated()
