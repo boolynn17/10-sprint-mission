@@ -107,6 +107,7 @@ public class BasicUserService implements UserService {
                 .anyMatch(s -> !s.isExpired());
     }
 
+  @PreAuthorize("authentication.principal.userDto.id == #userId")
   @Transactional
   @Override
   public UserDto update(UUID userId, UserUpdateRequest userUpdateRequest,
@@ -151,6 +152,7 @@ public class BasicUserService implements UserService {
     return userMapper.toDto(user);
   }
 
+  @PreAuthorize("authentication.principal.userDto.id == #userId")
   @Transactional
   @Override
   public void delete(UUID userId) {
