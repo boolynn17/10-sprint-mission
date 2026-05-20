@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,7 +32,7 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, LoginSuccessHandler loginSuccessHandler,
-                                           LoginFailureHandler loginFailureHandler, SessionRegistry sessionRegistry) throws Exception {
+                                           LoginFailureHandler loginFailureHandler, SessionRegistry sessionRegistry,  UserDetailsService userDetailsService) throws Exception {
         http
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -39,9 +40,14 @@ public class SecurityConfig {
                 )
                 .sessionManagement(management -> management
                         .sessionConcurrency(concurrency -> concurrency
-                                .maximumSessions(1)        // 동시 로그인 1개만 허용
+                                .maximumSessions(1)  // 동시 로그인 1개만 허용
                                 .sessionRegistry(sessionRegistry)
                         )
+                )
+                .rememberMe(rememberMe -> rememberMe
+                        .key("discodeit-remember-me")
+                        .tokenValiditySeconds(60 * 60 * 24 * 7)  // 7일간 유효
+                        .userDetailsService(userDetailsService)
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
