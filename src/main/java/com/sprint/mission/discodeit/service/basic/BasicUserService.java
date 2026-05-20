@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -174,6 +175,14 @@ public class BasicUserService implements UserService {
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> UserNotFoundException.withId(request.userId()));
         user.updateRole(request.newRole());
+
+        // 해당 유저의 세션 무효화
+        sessionRegistry.getAllPrincipals().stream()
+                .filter(p -> p instanceof DiscodeitUserDetails)
+                .map(p -> (DiscodeitUserDetails) p)
+                .filter(p -> p.getUserDto().id().equals(request.userId()))
+                .flatMap(p -> sessionRegistry.getAllSessions(p, false).stream())
+                .forEach(SessionInformation::expireNow);
 
         log.info("사용자 권한 수정 완료: userId={}, newRole={}", user.getId(), request.newRole());
         return userMapper.toDto(user);
