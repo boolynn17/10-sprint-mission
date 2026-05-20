@@ -6,7 +6,6 @@ import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.service.UserService;
-import com.sprint.mission.discodeit.service.UserStatusService;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -34,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController implements UserApi {
 
   private final UserService userService;
-  private final UserStatusService userStatusService;
 
   @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
   @Override
