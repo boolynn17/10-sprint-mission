@@ -45,6 +45,10 @@ info:
       max-request-size: ${spring.servlet.multipart.maxRequestSize}
 
 discodeit:
+  jwt:
+    secret: ${JWT_SECRET:my-secret-key-for-discodeit-must-be-at-least-32-bytes!!}
+    access-token-expiration: 3600000     # 1시간
+    refresh-token-expiration: 604800000  # 7일
   storage:
     type: ${STORAGE_TYPE:local}  # local | s3 (기본값: local)
     local:
