@@ -43,17 +43,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .rememberMe(rememberMe -> rememberMe
-                        .key("discodeit-remember-me")
-                        .tokenValiditySeconds(60 * 60 * 24 * 7)  // 7일간 유효
-                        .userDetailsService(userDetailsService)
-                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/csrf-token",  // CSRF 토큰 발급
                                 "/api/users",            // 회원가입
                                 "/api/auth/login",       // 로그인
                                 "/api/auth/logout",      // 로그아웃
+                                "/api/auth/refresh",
                                 "/swagger-ui/**",        // Swagger UI (API가 아닌 요청)
                                 "/v3/api-docs/**",       // Swagger docs (API가 아닌 요청)
                                 "/actuator/**",           // Actuator (API가 아닌 요청)
