@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.config;
 
+import com.sprint.mission.discodeit.security.JwtLoginSuccessHandler;
 import com.sprint.mission.discodeit.security.LoginFailureHandler;
 import com.sprint.mission.discodeit.security.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,17 +34,16 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, LoginSuccessHandler loginSuccessHandler,
-                                           LoginFailureHandler loginFailureHandler, SessionRegistry sessionRegistry,  UserDetailsService userDetailsService) throws Exception {
+                                           LoginFailureHandler loginFailureHandler, SessionRegistry sessionRegistry, UserDetailsService userDetailsService, JwtLoginSuccessHandler jwtLoginSuccessHandler) throws Exception {
         http
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
                 )
-                .sessionManagement(management -> management
-                        .sessionConcurrency(concurrency -> concurrency
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                                 .maximumSessions(1)  // 동시 로그인 1개만 허용
                                 .sessionRegistry(sessionRegistry)
-                        )
                 )
                 .rememberMe(rememberMe -> rememberMe
                         .key("discodeit-remember-me")
@@ -70,7 +71,7 @@ public class SecurityConfig {
                 )
                 .formLogin(login -> login
                         .loginProcessingUrl("/api/auth/login")
-                        .successHandler(loginSuccessHandler)
+                        .successHandler(jwtLoginSuccessHandler)
                         .failureHandler(loginFailureHandler))
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
