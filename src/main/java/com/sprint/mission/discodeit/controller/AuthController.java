@@ -5,9 +5,7 @@ import com.sprint.mission.discodeit.dto.data.JwtDto;
 import com.sprint.mission.discodeit.dto.data.UserDto;
 import com.sprint.mission.discodeit.dto.request.UserRoleUpdateRequest;
 import com.sprint.mission.discodeit.exception.ErrorResponse;
-import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
-import com.sprint.mission.discodeit.security.DiscodeitUserDetailsService;
-import com.sprint.mission.discodeit.security.JwtTokenProvider;
+import com.sprint.mission.discodeit.security.*;
 import com.sprint.mission.discodeit.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -33,6 +29,7 @@ public class AuthController implements AuthApi {
   private final UserService userService;
   private final JwtTokenProvider jwtTokenProvider;
   private final DiscodeitUserDetailsService discodeitUserDetailsService;
+  private final JwtRegistry jwtRegistry;
 
   @GetMapping("/csrf-token")
   public ResponseEntity<Void> getCsrfToken(CsrfToken csrfToken) {
@@ -47,7 +44,7 @@ public class AuthController implements AuthApi {
   }
 
   @PostMapping("/refresh")
-  public ResponseEntity<?> refresh(HttpServletRequest request) {
+  public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) {
     // 쿠키에서 REFRESH_TOKEN 추출
     String refreshToken = null;
     if (request.getCookies() != null) {
@@ -60,7 +57,8 @@ public class AuthController implements AuthApi {
     }
 
     // 리프레시 토큰 없거나 유효하지 않은 경우
-    if (refreshToken == null || !jwtTokenProvider.validate(refreshToken)) {
+    if (refreshToken == null || !jwtTokenProvider.validate(refreshToken)
+            || !jwtRegistry.hasActiveJwtInformationByRefreshToken(refreshToken)) {
       return ResponseEntity
               .status(HttpStatus.UNAUTHORIZED)
               .body(new ErrorResponse(
@@ -87,12 +85,16 @@ public class AuthController implements AuthApi {
 
     // Refresh Token Rotation - 새 리프레시 토큰 발급
     String newRefreshToken = jwtTokenProvider.generateRefreshToken(userId);
+
+    // Registry 업데이트
+    jwtRegistry.rotateJwtInformation(
+            refreshToken,
+            new JwtInformation(userDto, newAccessToken, newRefreshToken)
+    );
+
     Cookie refreshCookie = new Cookie("REFRESH_TOKEN", newRefreshToken);
     refreshCookie.setHttpOnly(true);
     refreshCookie.setPath("/");
-
-    HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder
-            .getRequestAttributes()).getResponse();
     response.addCookie(refreshCookie);
 
     return ResponseEntity.ok(new JwtDto(userDto, newAccessToken));

@@ -29,13 +29,14 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final DiscodeitUserDetailsService userDetailsService;
+    private final DiscodeitUserDetailsService discodeitUserDetailsService;
     private final JwtLoginSuccessHandler jwtLoginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
     private final JwtLogoutHandler jwtLogoutHandler;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -83,7 +84,7 @@ public class SecurityConfig {
                         })
                 )
                .addFilterBefore(
-                       jwtAuthenticationFilter(),
+                       jwtAuthenticationFilter,
                        UsernamePasswordAuthenticationFilter.class
                 );
         return http.build();
@@ -111,7 +112,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService);
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtRegistry jwtRegistry) {
+        return new JwtAuthenticationFilter(jwtTokenProvider, discodeitUserDetailsService, jwtRegistry);
     }
 }

@@ -20,6 +20,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final ObjectMapper objectMapper;
+    private final JwtRegistry jwtRegistry;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -36,6 +37,9 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // Refresh Token 발급 후 쿠키에 저장
         String refreshToken = jwtTokenProvider.generateRefreshToken(userDto.id());
+
+        jwtRegistry.registerJwtInformation(new JwtInformation(userDto, accessToken, refreshToken));
+
         Cookie refreshCookie = new Cookie("REFRESH_TOKEN", refreshToken);
         refreshCookie.setHttpOnly(true);
         refreshCookie.setPath("/");

@@ -18,6 +18,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final DiscodeitUserDetailsService discodeitUserDetailsService;
+    private final JwtRegistry jwtRegistry;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -26,7 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = resolveToken(request);
 
         // 2. 토큰이 있고 유효한 경우에만 인증 처리
-        if (token != null && jwtTokenProvider.validate(token)) {
+        if (token != null && jwtTokenProvider.validate(token)
+                && jwtRegistry.hasActiveJwtInformationByAccessToken(token)) {
             String username = jwtTokenProvider.getUsername(token);
 
             // 3. DB에서 유저 정보 조회
