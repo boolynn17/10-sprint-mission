@@ -12,7 +12,6 @@ import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
-import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.time.Instant;
@@ -21,8 +20,6 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +35,6 @@ public class BasicUserService implements UserService {
   private final BinaryContentRepository binaryContentRepository;
   private final BinaryContentStorage binaryContentStorage;
   private final PasswordEncoder passwordEncoder;
-  private final SessionRegistry sessionRegistry;
 
   @Transactional
   @Override
@@ -98,15 +94,6 @@ public class BasicUserService implements UserService {
     log.info("모든 사용자 조회 완료: 총 {}명", userDtos.size());
     return userDtos;
   }
-
-    private boolean isOnline(UUID userId) {
-        return sessionRegistry.getAllPrincipals().stream()
-                .filter(p -> p instanceof DiscodeitUserDetails)
-                .map(p -> (DiscodeitUserDetails) p)
-                .filter(p -> p.getUserDto().id().equals(userId))
-                .flatMap(p -> sessionRegistry.getAllSessions(p, false).stream())
-                .anyMatch(s -> !s.isExpired());
-    }
 
   @PreAuthorize("authentication.principal.userDto.id == #userId")
   @Transactional
@@ -175,14 +162,6 @@ public class BasicUserService implements UserService {
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> UserNotFoundException.withId(request.userId()));
         user.updateRole(request.newRole());
-
-        // 해당 유저의 세션 무효화
-        sessionRegistry.getAllPrincipals().stream()
-                .filter(p -> p instanceof DiscodeitUserDetails)
-                .map(p -> (DiscodeitUserDetails) p)
-                .filter(p -> p.getUserDto().id().equals(request.userId()))
-                .flatMap(p -> sessionRegistry.getAllSessions(p, false).stream())
-                .forEach(SessionInformation::expireNow);
 
         log.info("사용자 권한 수정 완료: userId={}, newRole={}", user.getId(), request.newRole());
         return userMapper.toDto(user);
