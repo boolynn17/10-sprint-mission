@@ -44,8 +44,8 @@ public class JwtTokenProvider {
     }
 
     // Refresh Token 발급
-    public String generateRefreshToken(UUID userId) {
-        return generateToken(userId, null, null, refreshTokenExpiration);
+    public String generateRefreshToken(UUID userId, String username) {
+        return generateToken(userId, username, null, refreshTokenExpiration);
     }
 
     // 토큰 생성 공통 메서드

@@ -36,7 +36,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
         );
 
         // Refresh Token 발급 후 쿠키에 저장
-        String refreshToken = jwtTokenProvider.generateRefreshToken(userDto.id());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(userDto.id(), userDto.username());
 
         jwtRegistry.registerJwtInformation(new JwtInformation(userDto, accessToken, refreshToken));
 

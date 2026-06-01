@@ -84,7 +84,7 @@ public class AuthController implements AuthApi {
     );
 
     // Refresh Token Rotation - 새 리프레시 토큰 발급
-    String newRefreshToken = jwtTokenProvider.generateRefreshToken(userId);
+    String newRefreshToken = jwtTokenProvider.generateRefreshToken(userId, userDto.username());
 
     // Registry 업데이트
     jwtRegistry.rotateJwtInformation(
