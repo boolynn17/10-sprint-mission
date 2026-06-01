@@ -12,6 +12,7 @@ import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.security.JwtRegistry;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.time.Instant;
@@ -35,6 +36,7 @@ public class BasicUserService implements UserService {
   private final BinaryContentRepository binaryContentRepository;
   private final BinaryContentStorage binaryContentStorage;
   private final PasswordEncoder passwordEncoder;
+  private final JwtRegistry jwtRegistry;
 
   @Transactional
   @Override
@@ -162,6 +164,8 @@ public class BasicUserService implements UserService {
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> UserNotFoundException.withId(request.userId()));
         user.updateRole(request.newRole());
+
+        jwtRegistry.invalidateJwtInformationByUserId(request.userId());
 
         log.info("사용자 권한 수정 완료: userId={}, newRole={}", user.getId(), request.newRole());
         return userMapper.toDto(user);
