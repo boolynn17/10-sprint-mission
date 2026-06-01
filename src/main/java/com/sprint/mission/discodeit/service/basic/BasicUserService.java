@@ -91,7 +91,11 @@ public class BasicUserService implements UserService {
     log.debug("모든 사용자 조회 시작");
     List<UserDto> userDtos = userRepository.findAllWithProfile()
         .stream()
-        .map(userMapper::toDto)
+            .map(user -> {
+                UserDto dto = userMapper.toDto(user);
+                boolean online = jwtRegistry.hasActiveJwtInformationByUserId(dto.id());
+                return new UserDto(dto.id(), dto.username(), dto.email(), dto.profile(), online, dto.role());
+            })
         .toList();
     log.info("모든 사용자 조회 완료: 총 {}명", userDtos.size());
     return userDtos;
