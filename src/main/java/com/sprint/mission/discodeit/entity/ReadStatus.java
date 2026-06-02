@@ -27,21 +27,28 @@ public class ReadStatus extends BaseUpdatableEntity {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "user_id", columnDefinition = "uuid")
   private User user;
+
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "channel_id", columnDefinition = "uuid")
   private Channel channel;
+
   @Column(columnDefinition = "timestamp with time zone", nullable = false)
   private Instant lastReadAt;
 
-  public ReadStatus(User user, Channel channel, Instant lastReadAt) {
+  @Column(nullable = false)
+  private boolean notificationEnabled;
+
+  public ReadStatus(User user, Channel channel, Instant lastReadAt, boolean notificationEnabled) {
     this.user = user;
     this.channel = channel;
     this.lastReadAt = lastReadAt;
+    this.notificationEnabled = notificationEnabled;
   }
 
-  public void update(Instant newLastReadAt) {
+  public void update(Instant newLastReadAt, boolean notificationEnabled) {
     if (newLastReadAt != null && !newLastReadAt.equals(this.lastReadAt)) {
       this.lastReadAt = newLastReadAt;
+      this.notificationEnabled = notificationEnabled;
     }
   }
 }
