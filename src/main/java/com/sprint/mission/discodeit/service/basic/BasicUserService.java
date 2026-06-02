@@ -8,6 +8,7 @@ import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.event.BinaryContentCreatedEvent;
+import com.sprint.mission.discodeit.event.RoleUpdatedEvent;
 import com.sprint.mission.discodeit.exception.user.UserAlreadyExistsException;
 import com.sprint.mission.discodeit.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
@@ -171,6 +172,8 @@ public class BasicUserService implements UserService {
         user.updateRole(request.newRole());
 
         jwtRegistry.invalidateJwtInformationByUserId(request.userId());
+
+        eventPublisher.publishEvent(new RoleUpdatedEvent(user.getId(), request.newRole()));
 
         log.info("사용자 권한 수정 완료: userId={}, newRole={}", user.getId(), request.newRole());
         return userMapper.toDto(user);
