@@ -67,6 +67,16 @@ CREATE TABLE read_statuses
     UNIQUE (user_id, channel_id)
 );
 
+--Notification
+CREATE TABLE notifications
+(
+    id          uuid PRIMARY KEY,
+    created_at  timestamp with time zone NOT NULL,
+    receiver_id uuid                     NOT NULL,
+    title       varchar(255)             NOT NULL,
+    content     text                     NOT NULL
+);
+
 
 -- 제약 조건
 -- User (1) -> BinaryContent (1)
@@ -113,3 +123,10 @@ ALTER TABLE read_statuses
 
 ALTER TABLE users
     ADD COLUMN role varchar(20) NOT NULL DEFAULT 'USER';
+
+-- Notification (N) -> User (1)
+ALTER TABLE notifications
+    ADD CONSTRAINT fk_notification_user
+        FOREIGN KEY (receiver_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE;

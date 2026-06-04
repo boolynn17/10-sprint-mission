@@ -173,7 +173,7 @@ public class BasicUserService implements UserService {
 
         jwtRegistry.invalidateJwtInformationByUserId(request.userId());
 
-        eventPublisher.publishEvent(new RoleUpdatedEvent(user.getId(), request.newRole()));
+        eventPublisher.publishEvent(new RoleUpdatedEvent(user.getId(), user.getRole(), request.newRole()));
 
         log.info("사용자 권한 수정 완료: userId={}, newRole={}", user.getId(), request.newRole());
         return userMapper.toDto(user);
