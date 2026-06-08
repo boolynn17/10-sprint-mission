@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.storage.s3;
 
 import com.sprint.mission.discodeit.dto.data.BinaryContentDto;
+import com.sprint.mission.discodeit.entity.BinaryContentStatus;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,9 @@ class S3BinaryContentStorageTest {
                 props.getProperty("AWS_S3_SECRET_KEY"),
                 props.getProperty("AWS_S3_REGION"),
                 props.getProperty("AWS_S3_BUCKET"),
-                600L
+                600L,
+                null,
+                null
         );
     }
 
@@ -72,7 +75,7 @@ class S3BinaryContentStorageTest {
         storage.put(id, "download test".getBytes());
 
         BinaryContentDto dto = new BinaryContentDto(
-                id, "test.png", 1024L, "image/png");
+                id, "test.png", 1024L, "image/png", BinaryContentStatus.SUCCESS);
 
         ResponseEntity<Void> response = (ResponseEntity<Void>) storage.download(dto);
 
