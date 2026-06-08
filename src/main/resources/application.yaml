@@ -14,6 +14,17 @@ spring:
   profiles:
     active:
       - dev
+  cache:
+    type: caffeine
+    cache-names:
+      - users
+      - channels
+      - notifications
+    caffeine:
+      spec: >
+        maximumSize=100,
+        expireAfterAccess=600s,
+        recordStats 
 
 management:
   endpoints:
