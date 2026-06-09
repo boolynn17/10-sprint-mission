@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,6 +42,7 @@ public class BasicUserService implements UserService {
   private final JwtRegistry jwtRegistry;
   private final ApplicationEventPublisher eventPublisher;
 
+  @CacheEvict(value = "users", allEntries = true)
   @Transactional
   @Override
   public UserDto create(UserCreateRequest userCreateRequest,
@@ -105,6 +107,7 @@ public class BasicUserService implements UserService {
     return userDtos;
   }
 
+  @CacheEvict(value = "users", allEntries = true)
   @PreAuthorize("authentication.principal.userDto.id == #userId")
   @Transactional
   @Override
@@ -150,6 +153,7 @@ public class BasicUserService implements UserService {
     return userMapper.toDto(user);
   }
 
+  @CacheEvict(value = "users", allEntries = true)
   @PreAuthorize("authentication.principal.userDto.id == #userId")
   @Transactional
   @Override
@@ -164,6 +168,7 @@ public class BasicUserService implements UserService {
     log.info("사용자 삭제 완료: id={}", userId);
   }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Transactional
     @Override
     @PreAuthorize("hasRole('ADMIN')")

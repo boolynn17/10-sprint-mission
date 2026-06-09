@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,7 @@ public class JwtLogoutHandler implements LogoutHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtRegistry jwtRegistry;
+    private final CacheManager cacheManager;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -46,6 +49,12 @@ public class JwtLogoutHandler implements LogoutHandler {
         response.addCookie(refreshCookie);
 
         log.debug("리프레시 토큰 쿠키 삭제 완료");
+
+        // 사용자 목록 캐시 무효화
+        Cache cache = cacheManager.getCache("users");
+        if (cache != null) {
+            cache.clear();
+        }
     }
 
 }

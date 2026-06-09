@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.event;
 
+import org.springframework.cache.Cache;
 import com.sprint.mission.discodeit.entity.Notification;
 import com.sprint.mission.discodeit.repository.NotificationRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
@@ -7,6 +8,7 @@ import com.sprint.mission.discodeit.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -20,6 +22,7 @@ public class NotificationEventListener {
     private final NotificationRepository notificationRepository;
     private final ReadStatusRepository readStatusRepository;
     private final UserRepository userRepository;
+    private final CacheManager cacheManager;
 
     @Async
     @Transactional
@@ -36,6 +39,12 @@ public class NotificationEventListener {
                     notificationRepository.save(
                             new Notification(rs.getUser(), title, content)
                     );
+
+                    // 알림 생성 시 캐시 무효화
+                    Cache cache = cacheManager.getCache("notifications");
+                    if (cache != null) {
+                        cache.evict(rs.getUser().getId());
+                    }
                     log.debug("메시지 알림 생성: receiverId={}", rs.getUser().getId());
                 });
     }
@@ -49,6 +58,12 @@ public class NotificationEventListener {
             String content = event.getOldRole().name() + " -> " + event.getNewRole().name();
 
             notificationRepository.save(new Notification(user, title, content));
+
+            // 알림 생성 시 캐시 무효화
+            Cache cache = cacheManager.getCache("notifications");
+            if (cache != null) {
+                cache.evict(event.getUserId());
+            }
             log.debug("권한 변경 알림 생성: userId={}", event.getUserId());
         });
     }
